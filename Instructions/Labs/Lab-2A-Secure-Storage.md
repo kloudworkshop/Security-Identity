@@ -13,29 +13,21 @@ lab:
 
 # Lab Setup
 
-Lab profile - https://labondemand.com/LabProfile/217879
+Follow these steps to deploy the resources used in the lab:
 
-This lab runs on a Cloud Slice. Follow these steps to build out your lab scenarios:
+1. Open the **Azure portal** at `https://portal.azure.com` and sign in with **User1**.
 
-1. Open the **Azure Portal** at `https://portal.azure.com`.
 
-1. Log in with the **User-1** administrator role.
+1. In the portal search bar, find and open **Deploy a custom template**.
 
-1. In the **Search** bar find and open **Deploy a custom template**.
-   
-1. Select **Build your own template in the editor**.
+1. Select **Build your own template in the editor**, and then select **Load file**.
 
-1. In the menu choose **Load file**.
+1. Select **lab-2a-setup.json** from the **F:\AllFiles\Lab-2A** folder on the lab VM, and then select **Save**.
 
-1. Select the file **lab-2a-setup.json** from the Desktop folder.
 
-1. Select **Save**.
+1. Select **Review + create**, and then select **Create**.
 
-1. Select **Review + create**.
-
-    > **Note**: Deployment may take a few minutes to complete.
-
-1. Close the browser.
+1. Wait until the deployment shows **Succeeded** before continuing.
 
 ===
 
@@ -64,15 +56,25 @@ A **stored access policy** centralizes the permissions and lifetime of one or mo
 
 You will create a stored access policy on the `training-data` container that grants read access for 24 hours, then generate a SAS token that references the policy.
 
-1. Sign in to the Azure portal at `https://portal.azure.com` using your **User-1** credentials.
+> **Note**: The pre-provisioned storage account name begins with **`sc500lab2a`** followed by an 8-character suffix unique to your lab subscription. Throughout this lab, `<storage-account-name>` refers to that account. The `sc500-lab2a-rg` resource group contains exactly one storage account — select it whenever the lab asks for `<storage-account-name>`.
+
+1. Sign in to the Azure portal at `https://portal.azure.com` using your **User1** credentials.
 
 1. In the search bar, search for and select **Storage accounts**.
 
-1. Select **sc500lab2a@lab.LabInstance.Id**.
+1. Select the storage account whose name starts with **`sc500lab2a`** (there is only one in `sc500-lab2a-rg`).
 
 1. In the left menu, under **Data storage**, select **Containers**.
 
 1. Select the **training-data** container.
+
+1. Select **Upload**.
+
+1. On the **Upload blob** pane, select **Browse for files**, and then select **sample-1.json** from the **F:\AllFiles\Lab-2A** folder on the lab VM.
+
+1. Select **Upload**.
+
+1. Confirm that **sample-1.json** appears in the container.
 
 1. In the menu on the left, select **Settings** then **Access policy**.
 
@@ -93,7 +95,7 @@ You will create a stored access policy on the `training-data` container that gra
 
 1. Return to the **training-data** container overview.
 
-1. In the menu on the left, select **Shared access token**.
+1. In the menu on the left, select **Shared access tokens**.
 
 1. On the **Generate SAS** panel, configure the following:
 
@@ -127,7 +129,16 @@ Before restricting the storage account to a virtual network, verify that the SAS
     SAS_TOKEN="<paste your SAS token here>"
     ```
 
-1. Verify the variable is set by checking the first few characters:
+1. Capture the storage account name into a variable. The `sc500-lab2a-rg` resource group contains exactly one storage account, so this command reads the deployed name directly:
+
+    ```bash
+    STORAGE_NAME=$(az storage account list --resource-group sc500-lab2a-rg --query "[0].name" -o tsv)
+    echo "Storage account: $STORAGE_NAME"
+    ```
+
+    The output shows the actual account name (for example, `sc500lab2aabc12345`). You will reuse `$STORAGE_NAME` in every curl command in this lab.
+
+1. Verify the SAS variable is set by checking the first few characters:
 
     ```bash
     echo "${SAS_TOKEN:0:30}..."
@@ -141,7 +152,7 @@ Before restricting the storage account to a virtual network, verify that the SAS
 
     ```bash
     curl -s -w "\n--- HTTP Status: %{http_code} ---" \
-      "https://sc500lab2a@lab.LabInstance.Id.blob.core.windows.net/training-data/sample-1.json?${SAS_TOKEN}"
+      "https://${STORAGE_NAME}.blob.core.windows.net/training-data/sample-1.json?${SAS_TOKEN}"
     ```
 
     Confirm that the response ends with `--- HTTP Status: 200 ---` and the body contains the JSON content of the file. This confirms the SAS token is valid and the storage account currently allows read access from all networks.
@@ -154,7 +165,7 @@ Before restricting the storage account to a virtual network, verify that the SAS
 
 You will now change the storage account from **Allow all networks** to **Selected networks**, adding the pre-provisioned `sc500-lab2a-vnet` subnet as the only authorized network. You will then disable the **Allow Azure services** exception, which otherwise creates a bypass for any Azure-hosted service regardless of network membership.
 
-1. In the left menu for **sc500lab2a@lab.LabInstance.Id**, under **Security + networking**, select **Networking**.
+1. In the left menu for the storage account (**`<storage-account-name>`**), under **Security + networking**, select **Networking**.
 
 1. Select the **Public Access** tab, then select **Manage**.
 
@@ -190,30 +201,32 @@ You will now change the storage account from **Allow all networks** to **Selecte
 
 With the VNet-only restriction applied, verify that Cloud Shell — which runs outside the authorized VNet — is now blocked from accessing the storage account.
 
-1. Return to the **Cloud Shell** session (or reopen it if it closed). Check whether the `$SAS_TOKEN` variable is still set:
+1. Return to the **Cloud Shell** session (or reopen it if it closed). Check whether the `$SAS_TOKEN` and `$STORAGE_NAME` variables are still set:
 
     ```bash
     echo "${SAS_TOKEN:0:30}..."
+    echo "Storage account: $STORAGE_NAME"
     ```
 
-    If the output is `...` with nothing before it, the session timed out and the variable was cleared. Reassign it:
+    If either output is empty or `...`, the session timed out and the variables were cleared. Reassign them:
 
     ```bash
     SAS_TOKEN="<paste your SAS token here>"
+    STORAGE_NAME=$(az storage account list --resource-group sc500-lab2a-rg --query "[0].name" -o tsv)
     ```
 
-1. Run the same blob read request. If you reopened Cloud Shell, reassign `$SAS_TOKEN` first:
+1. Run the same blob read request:
 
     ```bash
     curl -s -w "\n--- HTTP Status: %{http_code} ---" \
-      "https://sc500lab2a@lab.LabInstance.Id.blob.core.windows.net/training-data/sample-1.json?${SAS_TOKEN}"
+      "https://${STORAGE_NAME}.blob.core.windows.net/training-data/sample-1.json?${SAS_TOKEN}"
     ```
 
     Confirm that the response body contains `<Code>AuthorizationFailure</Code>` and the response ends with `--- HTTP Status: 403 ---`. `AuthorizationFailure` is the error code Azure Storage returns when a request is blocked by the network firewall — the SAS token is valid, but the request origin (Cloud Shell's IP) is not in the authorized network list. This confirms the firewall is active.
 
 1. Close the Cloud Shell.
 
-1. In the left menu for `sc500lab2a@lab.LabInstance.Id`, select **Storage browser**.
+1. In the left menu for the storage account (`<storage-account-name>`), select **Storage browser**.
 
 1. Select **Blob containers**, then select **training-data**.
 
@@ -225,7 +238,7 @@ With the VNet-only restriction applied, verify that Cloud Shell — which runs o
 
 ## Enable Defender for Storage
 
-Defender for Storage provides threat detection for your storage account — detecting anomalous access patterns, malware uploads, and data exfiltration attempts. You will enable it at the resource level on `sc500lab2a@lab.LabInstance.Id`.
+Defender for Storage provides threat detection for your storage account — detecting anomalous access patterns, malware uploads, and data exfiltration attempts. You will enable it at the resource level on `<storage-account-name>`.
 
 Defender for Storage's malware scanning feature uses Azure Event Grid to route scan results. The Event Grid resource provider must be registered in your subscription before enabling Defender for Storage, or the enablement will partially fail.
 
@@ -234,7 +247,7 @@ Defender for Storage's malware scanning feature uses Azure Event Grid to route s
 1. Register the Event Grid resource provider:
 
     ```bash
-    az provider register --namespace Microsoft.EventGrid
+    az provider register --namespace Microsoft.EventGrid --wait
     ```
 
 1. Verify the registration is complete before proceeding:
@@ -243,13 +256,13 @@ Defender for Storage's malware scanning feature uses Azure Event Grid to route s
     az provider show --namespace Microsoft.EventGrid --query "registrationState" -o tsv
     ```
 
-    Wait until the output shows `Registered`. This typically takes 1–2 minutes. Re-run the command if it still shows `Registering`.
+    Confirm the output shows `Registered` before proceeding. The `--wait` option keeps the registration command running until Azure reports a terminal registration state.
 
 1. Close the Cloud Shell.
 
-1. In the left menu for `sc500lab2a@lab.LabInstance.Id`, under **Security + networking**, select **Microsoft Defender for Cloud**.
+1. In the left menu for the storage account (`<storage-account-name>`), under **Security + networking**, select **Microsoft Defender for Cloud**.
 
-1. Select **Enable for Storage on this storage account**.
+1. Select **Enable on storage account**.
 
     > **Note**: Defender for Storage can also be enabled at the subscription level from **Microsoft Defender for Cloud** → **Environment settings** → your subscription → **Storage**. Subscription-level enablement automatically protects all current and future storage accounts in the subscription without requiring per-resource configuration — the recommended approach for production environments. Resource-level enablement, used here, limits protection to a single account and is useful when cost control or selective coverage is required. After enabling at the resource level, the subscription-level **Environment settings** page will still show Defender for Storage as **Off** — this is expected. The subscription plan and resource-level overrides are independent. Confirm protection status on the storage account's own **Microsoft Defender for Cloud** blade, not at the subscription level.
 
@@ -261,7 +274,7 @@ Defender for Storage's malware scanning feature uses Azure Event Grid to route s
 
 Diagnostic logs capture management-plane operations on the storage account — including configuration changes, access policy modifications, and Defender for Storage alerts — and forward them to a Log Analytics workspace for retention and querying.
 
-1. In the left menu for **sc500lab2a@lab.LabInstance.Id**, under **Monitoring**, select **Diagnostic settings**.
+1. In the left menu for the storage account (**`<storage-account-name>`**), under **Monitoring**, select **Diagnostic settings**.
 
     The page shows diagnostic settings for the storage account and its sub-services. **StorageRead**, **StorageWrite**, and **StorageDelete** are blob-level log categories, so you need to configure settings at the blob sub-service level.
 
@@ -293,6 +306,6 @@ In this lab, you secured an Azure storage account that was previously open to al
 
 You created a **stored access policy** on the `training-data` container and generated a SAS token that references it. Unlike standalone SAS tokens — which cannot be revoked without rotating the account key — a policy-backed token can be invalidated instantly by modifying or deleting the policy. You verified the token worked before any network restrictions were in place.
 
-You then changed the storage account from **Allow all networks** to a VNet-only configuration, restricting data-plane access to the `sc500-lab2a-vnet` subnet and removing the **Allow Azure services** exception. You confirmed the restriction is active by running the same blob list command from Cloud Shell and observing the 403 error — and by observing that the Azure portal's Storage browser was also blocked from your current IP.
+You then changed the storage account from **Allow all networks** to a VNet-only configuration, restricting data-plane access to the `sc500-lab2a-vnet` subnet and removing the **Allow trusted Microsoft services** exception. You confirmed the restriction is active by running the same blob read request from Cloud Shell and observing the 403 error — and by observing that the Azure portal's Storage browser was also blocked from your current IP.
 
 Finally, you enabled **Defender for Storage** at the resource level to detect anomalous access patterns and data exfiltration attempts, and configured diagnostic log forwarding to a Log Analytics workspace for audit retention.

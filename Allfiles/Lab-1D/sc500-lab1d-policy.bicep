@@ -15,8 +15,7 @@
 //
 // Required permissions:
 //   Caller must have Owner or Policy Contributor at the subscription scope.
-//   Microsoft.PolicyInsights resource provider must be registered on the
-//   subscription (pre-registered as part of the Skillable lab template setup).
+//   Microsoft.PolicyInsights must be registered on the subscription during Lab Setup.
 //
 // =============================================================================
 

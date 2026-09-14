@@ -9,6 +9,7 @@
       "type": "string",
       "defaultValue": "eastus",
       "allowedValues": [
+        "centralus",
         "eastus",
         "eastus2",
         "westus",
@@ -26,12 +27,12 @@
     },
     "labInstanceId": {
       "type": "string",
-      "defaultValue": "@lab.LabInstance.Id",
       "minLength": 1,
       "maxLength": 8,
       "metadata": {
-        "description": "The Skillable lab instance ID. Used to generate globally unique resource names. Auto-populated by Skillable using @lab.LabInstance.Id variable."
-      }
+        "description": "Suffix used to generate globally unique resource names. Defaults to a deterministic eight-character value derived from the subscription ID."
+      },
+      "defaultValue": "[take(uniqueString(subscription().subscriptionId), 8)]"
     },
     "publisherEmail": {
       "type": "string",
@@ -54,6 +55,7 @@
     "openAiName": "[concat('sc500-lab3c-ai-', parameters('labInstanceId'))]",
     "aiHubName": "[concat('sc500-lab3c-hub-', parameters('labInstanceId'))]",
     "aiProjectName": "sc500-lab3c-foundry",
+    "openAiConnectionName": "sc500-lab3c-openai",
     "storageAccountName": "[concat('sc500lab3c', parameters('labInstanceId'))]",
     "keyVaultName": "[concat('sc500-kv-', parameters('labInstanceId'))]",
     "appInsightsName": "sc500-lab3c-insights",
@@ -89,41 +91,107 @@
           "scope": "inner"
         },
         "parameters": {
-          "location": { "value": "[parameters('location')]" },
-          "apimName": { "value": "[variables('apimName')]" },
-          "openAiName": { "value": "[variables('openAiName')]" },
-          "aiHubName": { "value": "[variables('aiHubName')]" },
-          "aiProjectName": { "value": "[variables('aiProjectName')]" },
-          "storageAccountName": { "value": "[variables('storageAccountName')]" },
-          "keyVaultName": { "value": "[variables('keyVaultName')]" },
-          "appInsightsName": { "value": "[variables('appInsightsName')]" },
-          "logAnalyticsName": { "value": "[variables('logAnalyticsName')]" },
-          "modelDeploymentName": { "value": "[variables('modelDeploymentName')]" },
-          "modelName": { "value": "[variables('modelName')]" },
-          "modelVersion": { "value": "[variables('modelVersion')]" },
-          "apiName": { "value": "[variables('apiName')]" },
-          "publisherEmail": { "value": "[parameters('publisherEmail')]" },
-          "publisherName": { "value": "[parameters('publisherName')]" }
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "apimName": {
+            "value": "[variables('apimName')]"
+          },
+          "openAiName": {
+            "value": "[variables('openAiName')]"
+          },
+          "aiHubName": {
+            "value": "[variables('aiHubName')]"
+          },
+          "aiProjectName": {
+            "value": "[variables('aiProjectName')]"
+          },
+          "openAiConnectionName": {
+            "value": "[variables('openAiConnectionName')]"
+          },
+          "storageAccountName": {
+            "value": "[variables('storageAccountName')]"
+          },
+          "keyVaultName": {
+            "value": "[variables('keyVaultName')]"
+          },
+          "appInsightsName": {
+            "value": "[variables('appInsightsName')]"
+          },
+          "logAnalyticsName": {
+            "value": "[variables('logAnalyticsName')]"
+          },
+          "modelDeploymentName": {
+            "value": "[variables('modelDeploymentName')]"
+          },
+          "modelName": {
+            "value": "[variables('modelName')]"
+          },
+          "modelVersion": {
+            "value": "[variables('modelVersion')]"
+          },
+          "apiName": {
+            "value": "[variables('apiName')]"
+          },
+          "publisherEmail": {
+            "value": "[parameters('publisherEmail')]"
+          },
+          "publisherName": {
+            "value": "[parameters('publisherName')]"
+          }
         },
         "template": {
           "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
           "contentVersion": "1.0.0.0",
           "parameters": {
-            "location": { "type": "string" },
-            "apimName": { "type": "string" },
-            "openAiName": { "type": "string" },
-            "aiHubName": { "type": "string" },
-            "aiProjectName": { "type": "string" },
-            "storageAccountName": { "type": "string" },
-            "keyVaultName": { "type": "string" },
-            "appInsightsName": { "type": "string" },
-            "logAnalyticsName": { "type": "string" },
-            "modelDeploymentName": { "type": "string" },
-            "modelName": { "type": "string" },
-            "modelVersion": { "type": "string" },
-            "apiName": { "type": "string" },
-            "publisherEmail": { "type": "string" },
-            "publisherName": { "type": "string" }
+            "location": {
+              "type": "string"
+            },
+            "apimName": {
+              "type": "string"
+            },
+            "openAiName": {
+              "type": "string"
+            },
+            "aiHubName": {
+              "type": "string"
+            },
+            "aiProjectName": {
+              "type": "string"
+            },
+            "openAiConnectionName": {
+              "type": "string"
+            },
+            "storageAccountName": {
+              "type": "string"
+            },
+            "keyVaultName": {
+              "type": "string"
+            },
+            "appInsightsName": {
+              "type": "string"
+            },
+            "logAnalyticsName": {
+              "type": "string"
+            },
+            "modelDeploymentName": {
+              "type": "string"
+            },
+            "modelName": {
+              "type": "string"
+            },
+            "modelVersion": {
+              "type": "string"
+            },
+            "apiName": {
+              "type": "string"
+            },
+            "publisherEmail": {
+              "type": "string"
+            },
+            "publisherName": {
+              "type": "string"
+            }
           },
           "variables": {
             "openAiEndpoint": "[concat('https://', parameters('openAiName'), '.openai.azure.com')]"
@@ -135,7 +203,9 @@
               "name": "[parameters('logAnalyticsName')]",
               "location": "[parameters('location')]",
               "properties": {
-                "sku": { "name": "PerGB2018" },
+                "sku": {
+                  "name": "PerGB2018"
+                },
                 "retentionInDays": 30
               }
             },
@@ -158,7 +228,9 @@
               "apiVersion": "2023-01-01",
               "name": "[parameters('storageAccountName')]",
               "location": "[parameters('location')]",
-              "sku": { "name": "Standard_LRS" },
+              "sku": {
+                "name": "Standard_LRS"
+              },
               "kind": "StorageV2",
               "properties": {
                 "accessTier": "Hot",
@@ -167,8 +239,12 @@
                 "supportsHttpsTrafficOnly": true,
                 "encryption": {
                   "services": {
-                    "blob": { "enabled": true },
-                    "file": { "enabled": true }
+                    "blob": {
+                      "enabled": true
+                    },
+                    "file": {
+                      "enabled": true
+                    }
                   },
                   "keySource": "Microsoft.Storage"
                 }
@@ -280,13 +356,35 @@
               }
             },
             {
+              "type": "Microsoft.MachineLearningServices/workspaces/connections",
+              "apiVersion": "2024-04-01-preview",
+              "name": "[concat(parameters('aiProjectName'), '/', parameters('openAiConnectionName'))]",
+              "dependsOn": [
+                "[resourceId('Microsoft.MachineLearningServices/workspaces', parameters('aiProjectName'))]",
+                "[resourceId('Microsoft.CognitiveServices/accounts', parameters('openAiName'))]"
+              ],
+              "properties": {
+                "category": "AzureOpenAI",
+                "target": "[variables('openAiEndpoint')]",
+                "authType": "ApiKey",
+                "isSharedToAll": true,
+                "credentials": {
+                  "key": "[listKeys(resourceId('Microsoft.CognitiveServices/accounts', parameters('openAiName')), '2024-04-01-preview').key1]"
+                },
+                "metadata": {
+                  "ApiType": "Azure",
+                  "ResourceId": "[resourceId('Microsoft.CognitiveServices/accounts', parameters('openAiName'))]"
+                }
+              }
+            },
+            {
               "type": "Microsoft.ApiManagement/service",
               "apiVersion": "2023-05-01-preview",
               "name": "[parameters('apimName')]",
               "location": "[parameters('location')]",
               "sku": {
-                "name": "Consumption",
-                "capacity": 0
+                "name": "BasicV2",
+                "capacity": 1
               },
               "identity": {
                 "type": "SystemAssigned"
@@ -310,14 +408,13 @@
                 "description": "Pre-configured API routing to Azure OpenAI gpt-5.4-mini deployment for SC-500 Lab 3C. Initially unsecured - students will apply rate limiting, subscription key authentication, and content safety controls.",
                 "subscriptionRequired": false,
                 "path": "sc500-foundry-api",
-                "protocols": [ "https" ],
+                "protocols": [
+                  "https"
+                ],
                 "serviceUrl": "[concat(variables('openAiEndpoint'), '/openai')]",
-                "apiVersion": "2024-02-01",
-                "apiVersionSetId": "",
-                "isCurrent": true,
                 "type": "http",
                 "format": "openapi+json",
-                "value": "[concat('{\"openapi\":\"3.0.0\",\"info\":{\"title\":\"Azure OpenAI API\",\"version\":\"2024-02-01\"},\"servers\":[{\"url\":\"', variables('openAiEndpoint'), '/openai\"}],\"paths\":{\"/deployments/', parameters('modelDeploymentName'), '/chat/completions\":{\"post\":{\"summary\":\"Create chat completion\",\"operationId\":\"chatCompletions\",\"parameters\":[{\"name\":\"api-version\",\"in\":\"query\",\"required\":true,\"schema\":{\"type\":\"string\",\"default\":\"2024-02-01\"}}],\"requestBody\":{\"required\":true,\"content\":{\"application/json\":{\"schema\":{\"type\":\"object\",\"properties\":{\"messages\":{\"type\":\"array\"},\"max_tokens\":{\"type\":\"integer\"}}}}}},\"responses\":{\"200\":{\"description\":\"Success\"}}}}}}')]"
+                "value": "[concat('{\"openapi\":\"3.0.0\",\"info\":{\"title\":\"Azure OpenAI API\",\"version\":\"2024-10-21\"},\"servers\":[{\"url\":\"', variables('openAiEndpoint'), '/openai\"}],\"paths\":{\"/deployments/', parameters('modelDeploymentName'), '/chat/completions\":{\"post\":{\"summary\":\"Create chat completion\",\"operationId\":\"chatCompletions\",\"parameters\":[{\"name\":\"api-version\",\"in\":\"query\",\"required\":true,\"schema\":{\"type\":\"string\",\"default\":\"2024-10-21\"}}],\"requestBody\":{\"required\":true,\"content\":{\"application/json\":{\"schema\":{\"type\":\"object\",\"properties\":{\"messages\":{\"type\":\"array\"},\"max_completion_tokens\":{\"type\":\"integer\"}}}}}},\"responses\":{\"200\":{\"description\":\"Success\"}}}}}}')]"
               }
             },
             {
@@ -330,13 +427,28 @@
               ],
               "properties": {
                 "description": "Azure OpenAI backend for SC-500 Lab 3C",
-                "url": "[variables('openAiEndpoint')]",
+                "url": "[concat(variables('openAiEndpoint'), '/openai')]",
                 "protocol": "http",
                 "credentials": {
                   "header": {
-                    "api-key": [ "[listKeys(resourceId('Microsoft.CognitiveServices/accounts', parameters('openAiName')), '2024-04-01-preview').key1]" ]
+                    "api-key": [
+                      "[listKeys(resourceId('Microsoft.CognitiveServices/accounts', parameters('openAiName')), '2024-04-01-preview').key1]"
+                    ]
                   }
                 }
+              }
+            },
+            {
+              "type": "Microsoft.ApiManagement/service/apis/policies",
+              "apiVersion": "2023-05-01-preview",
+              "name": "[concat(parameters('apimName'), '/', parameters('apiName'), '/policy')]",
+              "dependsOn": [
+                "[resourceId('Microsoft.ApiManagement/service/apis', parameters('apimName'), parameters('apiName'))]",
+                "[resourceId('Microsoft.ApiManagement/service/backends', parameters('apimName'), 'openai-backend')]"
+              ],
+              "properties": {
+                "format": "rawxml",
+                "value": "<policies><inbound><base /><set-backend-service backend-id=\"openai-backend\" /></inbound><backend><base /></backend><outbound><base /></outbound><on-error><base /></on-error></policies>"
               }
             }
           ],
@@ -344,10 +456,6 @@
             "openAiEndpoint": {
               "type": "string",
               "value": "[variables('openAiEndpoint')]"
-            },
-            "openAiKey": {
-              "type": "string",
-              "value": "[listKeys(resourceId('Microsoft.CognitiveServices/accounts', parameters('openAiName')), '2024-04-01-preview').key1]"
             },
             "apimGatewayUrl": {
               "type": "string",
@@ -387,9 +495,13 @@
       "type": "string",
       "value": "[variables('modelDeploymentName')]"
     },
+    "openAiConnectionName": {
+      "type": "string",
+      "value": "[variables('openAiConnectionName')]"
+    },
     "setupInstructions": {
       "type": "string",
-      "value": "The infrastructure has been deployed. IMPORTANT: The Azure AI Foundry project requires additional configuration: 1) Navigate to https://ai.azure.com and select the sc500-lab3c-foundry project. 2) Add a connection to the Azure OpenAI service. 3) Ensure the gpt-5.4-mini deployment is visible in Models + endpoints. The API Management API (sc500-foundry-api) is intentionally configured with NO subscription requirement and NO rate limit policy - students will apply these controls during the lab."
+      "value": "The infrastructure has been deployed. The sc500-lab3c-foundry project includes the sc500-lab3c-openai connection and gpt-5.4-mini deployment. The API Management API routes through the credentialed openai-backend but intentionally has no subscription requirement and no token rate limit policy; students apply those controls during the lab."
     }
   }
 }

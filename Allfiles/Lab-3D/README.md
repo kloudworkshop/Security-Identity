@@ -26,7 +26,8 @@ The `lab-3d-setup.json` ARM template provisions the following resources in the *
   
 - **Azure AI Foundry Project** (`sc500-lab3d-foundry`)
   - Project workspace visible in the AI Foundry portal
-  - **NO CONTENT SAFETY GUARDRAILS** (intentional - allows adversarial traffic to reach the model)
+  - Azure OpenAI connection: **sc500-lab3d-openai**
+  - **NO CUSTOM CONTENT SAFETY GUARDRAILS** (intentional - allows adversarial traffic to reach the model)
 
 ### Supporting Resources
 - **Log Analytics Workspace** (`sc500-lab3d-logs`)
@@ -48,16 +49,16 @@ Lab 3D is a **monitoring and detection lab**, not a configuration lab. Students 
 ### Option 1: Deploy via Azure Portal (Recommended)
 
 1. Sign in to the [Azure Portal](https://portal.azure.com)
-2. Search for **Deploy a custom template**
-3. Select **Build your own template in the editor**
-4. Click **Load file** and upload `lab-3d-setup.json`
-5. Click **Save**
-6. Configure parameters:
+1. Search for **Deploy a custom template**
+1. Select **Build your own template in the editor**
+1. Click **Load file** and upload `lab-3d-setup.json`
+1. Click **Save**
+1. Configure parameters:
    - **Subscription**: Select the lab subscription
    - **Location**: Choose a region that supports Azure OpenAI (e.g., East US, West Europe)
-   - **Lab Instance Id**: Use the Skillable variable `@lab.LabInstance.Id` or enter a unique 6-8 character identifier
+   - **Lab Instance Id**: Leave the generated default value.
    - **Enable Defender For AI**: Leave as `true` (enables Defender for AI Services on the subscription)
-7. Click **Review + create**, then **Create**
+1. Click **Review + create**, then **Create**
 
 **Deployment time:** Approximately 10-15 minutes
 
@@ -66,13 +67,12 @@ Lab 3D is a **monitoring and detection lab**, not a configuration lab. Students 
 ```bash
 # Set variables
 LOCATION="eastus"
-LAB_INSTANCE_ID="12345678"  # Use a unique 8-digit ID or Skillable @lab.LabInstance.Id
 
-# Deploy the template
+# Deploy the template; labInstanceId defaults to a deterministic subscription-derived value
 az deployment sub create \
   --location $LOCATION \
   --template-file lab-3d-setup.json \
-  --parameters location=$LOCATION labInstanceId=$LAB_INSTANCE_ID
+  --parameters location=$LOCATION
 ```
 
 ### Option 3: Deploy via PowerShell
@@ -80,14 +80,12 @@ az deployment sub create \
 ```powershell
 # Set variables
 $Location = "eastus"
-$LabInstanceId = "12345678"  # Use a unique 8-digit ID or Skillable @lab.LabInstance.Id
 
-# Deploy the template
+# Deploy the template; labInstanceId defaults to a deterministic subscription-derived value
 New-AzSubscriptionDeployment `
   -Location $Location `
   -TemplateFile .\lab-3d-setup.json `
-  -location $Location `
-  -labInstanceId $LabInstanceId
+  -location $Location
 ```
 
 ## Post-Deployment Configuration (CRITICAL)
@@ -95,11 +93,11 @@ New-AzSubscriptionDeployment `
 ### Step 1: Enable Defender for AI Services
 
 1. Navigate to **Microsoft Defender for Cloud** in the Azure portal
-2. Select **Environment settings** from the left menu
-3. Select your subscription
-4. On the **Defender plans** page, locate **AI Services** (or **Defender for AI**)
-5. Set to **On**
-6. Click **Save**
+1. Select **Environment settings** from the left menu
+1. Select your subscription
+1. On the **Defender plans** page, locate **AI Services** (or **Defender for AI**)
+1. Set to **On**
+1. Click **Save**
 
 **Note:** The ARM template parameter `enableDefenderForAI` is set to `true` but subscription-level Defender enablement may require manual verification.
 
@@ -107,10 +105,11 @@ New-AzSubscriptionDeployment `
 
 This is critical - content filters block adversarial queries before they reach the model, preventing Defender from seeing the attack patterns.
 
-1. Navigate to [Azure AI Foundry portal](https://ai.azure.com)
-2. Select the **sc500-lab3d-foundry** project
-3. In left navigation, select **Safety + security** > **Content filters**
-4. Verify **gpt-5.4-mini** deployment shows:
+1. Navigate to [Azure AI Foundry portal](https://ai.azure.com).
+1. Select the **sc500-lab3d-foundry** Hub project and then select **Open in Foundry Classic**.
+1. Under **My assets**, open **Models + endpoints** and confirm the **gpt-5.4-mini** deployment is visible through the **sc500-lab3d-openai** connection.
+1. Under **Protect and govern**, select **Guardrails + controls**, and then select **Content filters**.
+1. Verify **gpt-5.4-mini** shows:
    - Content filter: **Default** or **None** (NOT a custom filter with Medium/High thresholds)
    - If a custom filter is assigned, remove it or set it to "None"
 
@@ -121,12 +120,12 @@ This is critical - content filters block adversarial queries before they reach t
 You'll need these values to run the adversarial traffic script.
 
 1. Navigate to **Resource Groups** > **sc500-lab3d-rg** > **sc500-lab3d-ai-{instanceId}**
-2. Select **Keys and Endpoint** from the left menu
-3. Copy:
+1. Select **Keys and Endpoint** from the left menu
+1. Copy:
    - **Endpoint**: `https://sc500-lab3d-ai-{instanceId}.openai.azure.com/`
    - **Key 1**: The API key value
 
-4. Construct the full endpoint URL:
+1. Construct the full endpoint URL:
    ```
    https://sc500-lab3d-ai-{instanceId}.openai.azure.com/openai/deployments/gpt-5.4-mini/chat/completions?api-version=2024-02-01
    ```
@@ -141,8 +140,8 @@ az deployment sub show --name sc500-lab3d-infrastructure --query properties.outp
 This script sends 15 adversarial queries (5 jailbreak attempts, 5 prompt injection probes, 5 high-volume bursts) to the model endpoint.
 
 1. Open PowerShell 7+ (or Windows PowerShell 5.1)
-2. Navigate to the `Allfiles\Lab-3D` folder
-3. Run the script:
+1. Navigate to the `Allfiles\Lab-3D` folder
+1. Run the script:
 
    ```powershell
    .\generate-adversarial-traffic.ps1 `
@@ -150,12 +149,12 @@ This script sends 15 adversarial queries (5 jailbreak attempts, 5 prompt injecti
        -ApiKey "YOUR_API_KEY_HERE"
    ```
 
-4. Observe the output:
+1. Observe the output:
    - **Green messages** (`HTTP 200`) = Query sent successfully, model responded
    - **Yellow messages** (`HTTP 4xx/5xx`) = Expected for some adversarial queries
    - **Red messages** (`HTTP 400/403 blocked by content filter`) = **PROBLEM** - Content filter is active, remove it and re-run
 
-5. Verify all 15 queries complete (script takes ~12-15 seconds)
+1. Verify all 15 queries complete (script takes ~12-15 seconds)
 
 ### Step 5: WAIT 24+ HOURS ⏰
 
@@ -163,9 +162,9 @@ This script sends 15 adversarial queries (5 jailbreak attempts, 5 prompt injecti
 
 Defender for AI requires time to:
 1. Collect behavioral telemetry from the queries
-2. Analyze the patterns across multiple requests
-3. Correlate signals into security findings
-4. Populate the findings in the Defender for Cloud dashboard
+1. Analyze the patterns across multiple requests
+1. Correlate signals into security findings
+1. Populate the findings in the Defender for Cloud dashboard
 
 **Minimum wait time:** 24 hours  
 **Recommended wait time:** 36-48 hours for consistent results
@@ -175,13 +174,13 @@ Defender for AI requires time to:
 Before marking the environment as ready for students:
 
 1. Navigate to **Microsoft Defender for Cloud** in the Azure portal
-2. Select **Data and AI security** from the left menu
-3. Confirm:
+1. Select **Data and AI security** from the left menu
+1. Confirm:
    - **sc500-lab3d-foundry** appears in the protected resources list
    - Status shows **Protected**
    - **At least 2 security findings** are visible in the findings/alerts section
 
-4. If fewer than 2 findings appear:
+1. If fewer than 2 findings appear:
    - Wait another 6-12 hours
    - Re-run `generate-adversarial-traffic.ps1` (this adds more signal)
    - Wait another 12-24 hours and re-check
@@ -191,12 +190,12 @@ Before marking the environment as ready for students:
 During the lab, students will:
 
 1. **Review protection status** - See `sc500-lab3d-foundry` listed as a protected AI resource
-2. **Review active findings** - See 1-3 findings generated by the pre-run adversarial traffic:
+1. **Review active findings** - See 1-3 findings generated by the pre-run adversarial traffic:
    - Jailbreak attempt patterns
    - Prompt injection probes
    - Anomalous volume bursts
-3. **Review severity and remediation** - Understand what Defender detected and what remediation is recommended
-4. **Review AI security recommendations** - See recommendations to apply content filters, enable monitoring, etc.
+1. **Review severity and remediation** - Understand what Defender detected and what remediation is recommended
+1. **Review AI security recommendations** - See recommendations to apply content filters, enable monitoring, etc.
 
 Students do NOT configure or fix anything in this lab - they only observe and interpret the findings.
 
@@ -210,9 +209,9 @@ Students do NOT configure or fix anything in this lab - they only observe and in
 
 **Solution:**
 1. Verify NO content filter is assigned to gpt-5.4-mini
-2. Re-run `generate-adversarial-traffic.ps1`
-3. Wait another 24 hours
-4. If still no findings, check Defender for Cloud > Workload protections > AI services coverage
+1. Re-run `generate-adversarial-traffic.ps1`
+1. Wait another 24 hours
+1. If still no findings, check Defender for Cloud > Workload protections > AI services coverage
 
 ### Issue: Script returns "HTTP 403 blocked by content filter"
 **Solution:** Content filter is active. Navigate to ai.azure.com > sc500-lab3d-foundry > Safety + security > Content filters and remove any custom filter assigned to gpt-5.4-mini. Set to "None" or "Default" (with all thresholds off).
@@ -225,7 +224,7 @@ Students do NOT configure or fix anything in this lab - they only observe and in
 
 ## Cleanup
 
-The lab environment is typically auto-reset by Skillable. If manual cleanup is needed:
+Your lab host may reset the environment automatically. If manual cleanup is needed:
 
 ```bash
 az group delete --name sc500-lab3d-rg --yes --no-wait
@@ -233,8 +232,8 @@ az group delete --name sc500-lab3d-rg --yes --no-wait
 
 Also disable Defender for AI Services if no longer needed:
 1. Defender for Cloud > Environment settings > [Subscription] > Defender plans
-2. Set **AI Services** to **Off**
-3. Save
+1. Set **AI Services** to **Off**
+1. Save
 
 ## Timeline Summary
 
@@ -261,10 +260,11 @@ Also disable Defender for AI Services if no longer needed:
 | Resource Type | Resource Name | Purpose |
 |--------------|---------------|---------|
 | Resource Group | sc500-lab3d-rg | Contains all lab resources |
-| Azure OpenAI | sc500-lab3d-ai-{instanceId} | Hosts gpt-4o model (NO filters) |
+| Azure OpenAI | sc500-lab3d-ai-{instanceId} | Hosts gpt-5.4-mini model deployment |
 | AI Hub | sc500-lab3d-hub-{instanceId} | Foundry hub workspace |
-| AI Project | sc500-lab3d-foundry | Foundry project (students review this) |
-| Model Deployment | gpt-4o | Language model endpoint (20 TPM capacity) |
+| AI Project | sc500-lab3d-foundry | Foundry project connected to Azure OpenAI |
+| Azure OpenAI Connection | sc500-lab3d-openai | Connects the project to the Azure OpenAI account |
+| Model Deployment | gpt-5.4-mini | Language model endpoint (20 TPM capacity) |
 
 **Last Updated:** 2026-06-30  
 **Lab Version:** 1.0  

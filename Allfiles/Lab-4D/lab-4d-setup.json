@@ -10,12 +10,12 @@
       "Defender finding population (especially CSPM secret scanning and attack path analysis) can require 24+ hours after plan enablement.",
       "If configureDefenderPlans is true, subscription-level Defender pricing resources are configured."
     ],
-    "deployCommand": "az deployment sub create --location eastus --template-file lab-4d-setup.json"
+    "deployCommand": "az deployment sub create --location centralus --template-file lab-4d-setup.json"
   },
   "parameters": {
     "location": {
       "type": "string",
-      "defaultValue": "eastus",
+      "defaultValue": "centralus",
       "metadata": {
         "description": "Azure region for Lab 4D resources."
       }
@@ -25,27 +25,6 @@
       "defaultValue": "sc500-lab4d-rg",
       "metadata": {
         "description": "Resource group for Lab 4D resources."
-      }
-    },
-    "storageAccountName": {
-      "type": "string",
-      "defaultValue": "sc500lab4dstorage",
-      "metadata": {
-        "description": "Storage account name for sc500-lab4d-storage (must be globally unique, lowercase, 3-24 chars)."
-      }
-    },
-    "webAppName": {
-      "type": "string",
-      "defaultValue": "sc500-lab4d-webapp",
-      "metadata": {
-        "description": "Web App name (must be globally unique in azurewebsites.net)."
-      }
-    },
-    "keyVaultName": {
-      "type": "string",
-      "defaultValue": "sc500-lab4d-kv",
-      "metadata": {
-        "description": "Key Vault name (must be globally unique)."
       }
     },
     "virtualMachineName": {
@@ -70,11 +49,11 @@
     },
     "vmSize": {
       "type": "string",
-      "defaultValue": "Standard_D2s_v3",
+      "defaultValue": "Standard_D2s_v5",
       "allowedValues": [
         "Standard_B2s",
         "Standard_B1ms",
-        "Standard_D2s_v3",
+        "Standard_D2s_v6",
         "Standard_D2s_v5",
         "Standard_DS1_v2"
       ],
@@ -115,6 +94,15 @@
       "metadata": {
         "description": "App Service plan SKU for sc500-lab4d-webapp."
       }
+    },
+    "labInstanceId": {
+      "type": "string",
+      "defaultValue": "[take(uniqueString(subscription().subscriptionId), 8)]",
+      "minLength": 1,
+      "maxLength": 8,
+      "metadata": {
+        "description": "Suffix used to generate globally unique resource names. Defaults to a deterministic eight-character value derived from the subscription ID."
+      }
     }
   },
   "variables": {
@@ -129,7 +117,10 @@
     "serversPricingName": "VirtualMachines",
     "keyVaultPricingName": "KeyVaults",
     "appServicePricingName": "AppServices",
-    "cspmPricingName": "CloudPosture"
+    "cspmPricingName": "CloudPosture",
+    "storageAccountName": "[concat('sc500lab4dstore', toLower(parameters('labInstanceId')))]",
+    "webAppName": "[concat('sc500-lab4d-webapp-', toLower(parameters('labInstanceId')))]",
+    "keyVaultName": "[concat('sc500-lab4d-kv-', toLower(parameters('labInstanceId')))]"
   },
   "resources": [
     {
@@ -206,13 +197,13 @@
             "value": "[parameters('location')]"
           },
           "storageAccountName": {
-            "value": "[toLower(parameters('storageAccountName'))]"
+            "value": "[variables('storageAccountName')]"
           },
           "webAppName": {
-            "value": "[toLower(parameters('webAppName'))]"
+            "value": "[variables('webAppName')]"
           },
           "keyVaultName": {
-            "value": "[parameters('keyVaultName')]"
+            "value": "[variables('keyVaultName')]"
           },
           "virtualMachineName": {
             "value": "[parameters('virtualMachineName')]"
@@ -355,6 +346,20 @@
                   "bypass": "AzureServices",
                   "defaultAction": "Allow"
                 }
+              }
+            },
+            {
+              "type": "Microsoft.Authorization/roleAssignments",
+              "apiVersion": "2022-04-01",
+              "name": "[guid(resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName')), deployer().objectId, '21090545-7ca7-4776-b22c-e363652d74d2')]",
+              "scope": "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]",
+              "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+              ],
+              "properties": {
+                "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '21090545-7ca7-4776-b22c-e363652d74d2')]",
+                "principalId": "[deployer().objectId]",
+                "principalType": "User"
               }
             },
             {
@@ -556,15 +561,15 @@
     },
     "storageAccountName": {
       "type": "string",
-      "value": "[toLower(parameters('storageAccountName'))]"
+      "value": "[variables('storageAccountName')]"
     },
     "webAppName": {
       "type": "string",
-      "value": "[toLower(parameters('webAppName'))]"
+      "value": "[variables('webAppName')]"
     },
     "keyVaultName": {
       "type": "string",
-      "value": "[parameters('keyVaultName')]"
+      "value": "[variables('keyVaultName')]"
     },
     "virtualMachineName": {
       "type": "string",

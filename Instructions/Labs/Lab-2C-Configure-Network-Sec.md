@@ -15,29 +15,24 @@ lab:
 
 # Lab Setup
 
-Lab profile - https://labondemand.com/LabProfile/217879
+Follow these steps to deploy the resources used in the lab:
 
-This lab runs on a Cloud Slice. Follow these steps to build out your lab scenarios:
+1. Open the **Azure portal** at `https://portal.azure.com` and sign in with **User1**.
 
-1. Open the **Azure Portal** at `https://portal.azure.com`.
 
-1. Log in with the **User-1** administrator role.
+1. In the portal search bar, find and open **Deploy a custom template**.
 
-1. In the **Search** bar find and open **Deploy a custom template**.
-   
-1. Select **Build your own template in the editor**.
+1. Select **Build your own template in the editor**, and then select **Load file**.
 
-1. In the menu choose **Load file**.
+1. Select **lab-2c-setup.json** from the **F:\AllFiles\Lab-2C** folder on the lab VM, and then select **Save**.
 
-1. Select the file **lab-2c-setup.json** from the Desktop folder.
+1. On the **Basics** tab, keep **Resource group location** set to **East US**, **Location** set to **Central US**, and **VM size** set to **Standard_D2s_v6**.
 
-1. Select **Save**.
+1. For **VM admin password**, enter a strong, unique password that meets the displayed Azure complexity requirements. You will not need this password later in the lab.
 
-1. Select **Review + create**.
+1. Select **Review + create**, and then select **Create**.
 
-    > **Note**: Deployment may take a few minutes to complete.
-
-1. Close the browser.
+1. Wait until the deployment shows **Succeeded** before continuing.
 
 ===
 
@@ -65,7 +60,7 @@ This exercise should take approximately **65** minutes to complete.
 
 Azure Firewall is a managed, stateful network firewall as a service that provides centralized outbound traffic inspection for all resources in your hub-spoke network. In this lab, all outbound traffic from the `sc500-lab2c-spoke-vnet` workload subnet will route through the firewall in `sc500-lab2c-hub-vnet` — ensuring that outbound destinations are controlled by explicit application rules and all traffic is logged.
 
-1. Sign in to the **Azure portal** `https://portal.azure.com` using your **User-1** credentials.
+1. Sign in to the **Azure portal** `https://portal.azure.com` using your **User1** credentials.
 
 1. In the search bar, search for and select **Firewalls**.
 
@@ -77,11 +72,12 @@ Azure Firewall is a managed, stateful network firewall as a service that provide
     |---------|-------|
     | **Resource group** | sc500-lab2c-rg |
     | **Name** | `sc500-lab2c-fw` |
-    | **Region** | East US |
+    | **Region** | Central US |
     | **Availability zone** | None |
-    | **Firewall tier** | Standard |
+    | **Firewall SKU** | Standard |
     | **Firewall management** | Use a Firewall Policy to manage this firewall |
     | **Firewall policy** | Select **Add new**; name it `sc500-fw-policy`; select **Standard** tier; select **OK** |
+    | **Choose a virtual network** | Select **Use existing** |
     | **Virtual network** | sc500-lab2c-hub-vnet |
     | **Public IP address** | Select **Add new**; name it `sc500-lab2c-fw-pip`; select **OK** |
     | **Enable Firewall Management NIC** | Uncheck this checkbox |
@@ -111,7 +107,7 @@ The workload VM (**sc500-lab2c-vm**) currently has no NSG applied. Any source ca
     |---------|-------|
     | **Resource group** | sc500-lab2c-rg |
     | **Name** | `sc500-asg-ai-inference` |
-    | **Region** | East US |
+    | **Region** | Central US |
 
 1. Select **Review + create**, then select **Create**.
 
@@ -139,7 +135,7 @@ The workload VM (**sc500-lab2c-vm**) currently has no NSG applied. Any source ca
     |---------|-------|
     | **Resource group** | sc500-lab2c-rg |
     | **Name** | `sc500-lab2c-nsg` |
-    | **Region** | East US |
+    | **Region** | Central US |
 
 1. Select **Review + create**, then select **Create**.
 
@@ -202,11 +198,13 @@ The workload VM (**sc500-lab2c-vm**) currently has no NSG applied. Any source ca
 
 ## Configure a Private Endpoint for storage
 
-The workload storage account (`sc500lab2cstorage`) is currently accessible via its public endpoint from any network. You will create a Private Endpoint that places a private IP for the storage account directly in `workload-subnet`, then disable public access so the account is only reachable from inside the VNet.
+> **Note**: The deployed storage account name begins with **`sc500lab2c`** followed by the eight-character lab instance suffix. Throughout this lab, `<storage-account-name>` refers to that account. The `sc500-lab2c-rg` resource group contains exactly one storage account.
+
+The workload storage account (`<storage-account-name>`) is currently accessible via its public endpoint from any network. You will create a Private Endpoint that places a private IP for the storage account directly in `workload-subnet`, then disable public access so the account is only reachable from inside the VNet.
 
 1. In the Azure portal search bar, search for and select **Storage accounts**.
 
-1. Select **sc500lab2cstorage**.
+1. Select **<storage-account-name>**.
 
 1. In the left menu, under **Security + networking**, select **Networking**.
 
@@ -222,7 +220,7 @@ The workload storage account (`sc500lab2cstorage`) is currently accessible via i
     |---------|-------|
     | **Resource group** | sc500-lab2c-rg |
     | **Name** | `sc500-storage-pe` |
-    | **Region** | East US |
+    | **Region** | Central US |
 
 1. Select **Next: Resource**.
 
@@ -231,7 +229,7 @@ The workload storage account (`sc500lab2cstorage`) is currently accessible via i
     | Setting | Value |
     |---------|-------|
     | **Resource type** | Microsoft.Storage/storageAccounts |
-    | **Resource** | sc500lab2cstorage |
+    | **Resource** | <storage-account-name> |
     | **Target sub-resource** | blob |
 
 1. Select **Next: Virtual Network**.
@@ -253,7 +251,7 @@ The workload storage account (`sc500lab2cstorage`) is currently accessible via i
 
     Wait for the private endpoint to deploy (typically 1–2 minutes).
 
-1. Return to the **Networking** settings for `sc500lab2cstorage`.
+1. Return to the **Networking** settings for `<storage-account-name>`.
 
 1. On the **Public access** tab, select **Manage**.
 
@@ -324,7 +322,7 @@ You will add an application rule collection that allows the workload VMs to reac
     | **Resource group** | sc500-lab2c-rg |
     | **Name** | `sc500-spoke-rt` |
     | **Propagate gateway routes** | No |
-    | **Region** | East US |
+    | **Region** | Central US |
 
 1. Select **Review + create**, then select **Create**.
 
@@ -388,7 +386,7 @@ Network Watcher's **IP flow verify** tool tests whether a specific traffic flow 
 
     Confirm the result shows **Access denied** and identifies `DenyInboundRDP` as the rule responsible.
 
-2. Change **Local port** to `443` and select **Verify IP flow** again.
+2. Change **Local port** to `443` and **Remote IP address** to `10.4.0.250`, and then select **Verify IP flow** again.
 
     Confirm the result shows **Access allowed** and identifies `AllowInboundHTTPS` as the rule responsible.
 

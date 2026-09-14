@@ -1,0 +1,155 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.43.8.12551",
+      "templateHash": "2519055863164194540"
+    }
+  },
+  "parameters": {
+    "labInstanceId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 8,
+      "metadata": {
+        "description": "Suffix used to generate globally unique resource names. Defaults to a deterministic eight-character value derived from the subscription ID."
+      },
+      "defaultValue": "[take(uniqueString(subscription().subscriptionId), 8)]"
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "eastus",
+      "metadata": {
+        "description": "Azure region for all resources."
+      }
+    },
+    "user3ObjectId": {
+      "type": "string",
+      "metadata": {
+        "description": "Object ID of the User3 alias (username prefix sc500-user3-) in the Microsoft Entra tenant. This user has baseline LOD Reader access and receives a direct Contributor assignment on the lab subscription — the overprivileged access remediated in Section 4."
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/resourceGroups",
+      "apiVersion": "2022-09-01",
+      "name": "sc500-lab1d-rg",
+      "location": "[parameters('location')]"
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2025-04-01",
+      "name": "lab1d-rg-resources",
+      "resourceGroup": "sc500-lab1d-rg",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "labInstanceId": {
+            "value": "[parameters('labInstanceId')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.43.8.12551",
+              "templateHash": "5015935483938588429"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string"
+            },
+            "labInstanceId": {
+              "type": "string"
+            }
+          },
+          "variables": {
+            "storageAccountName": "[format('sc500lab1d{0}', parameters('labInstanceId'))]",
+            "vnetName": "sc500-lab1d-vnet",
+            "subnetName": "default"
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Network/virtualNetworks",
+              "apiVersion": "2023-04-01",
+              "name": "[variables('vnetName')]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "addressSpace": {
+                  "addressPrefixes": [
+                    "10.0.0.0/16"
+                  ]
+                },
+                "subnets": [
+                  {
+                    "name": "[variables('subnetName')]",
+                    "properties": {
+                      "addressPrefix": "10.0.0.0/24"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "Microsoft.Storage/storageAccounts",
+              "apiVersion": "2023-01-01",
+              "name": "[variables('storageAccountName')]",
+              "location": "[parameters('location')]",
+              "sku": {
+                "name": "Standard_LRS"
+              },
+              "kind": "StorageV2",
+              "properties": {
+                "minimumTlsVersion": "TLS1_2",
+                "allowBlobPublicAccess": false,
+                "supportsHttpsTrafficOnly": true
+              }
+            }
+          ],
+          "outputs": {
+            "storageAccountName": {
+              "type": "string",
+              "value": "[variables('storageAccountName')]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[subscriptionResourceId('Microsoft.Resources/resourceGroups', 'sc500-lab1d-rg')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2022-04-01",
+      "name": "[guid(subscription().id, parameters('user3ObjectId'), 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
+      "properties": {
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
+        "principalId": "[parameters('user3ObjectId')]",
+        "principalType": "User",
+        "description": "SC-500 Lab 1D: User3 Contributor on the lab subscription — overprivileged assignment remediated via Access Review in Section 4."
+      }
+    }
+  ],
+  "outputs": {
+    "resourceGroupId": {
+      "type": "string",
+      "value": "[subscriptionResourceId('Microsoft.Resources/resourceGroups', 'sc500-lab1d-rg')]"
+    },
+    "storageAccountName": {
+      "type": "string",
+      "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, 'sc500-lab1d-rg'), 'Microsoft.Resources/deployments', 'lab1d-rg-resources'), '2025-04-01').outputs.storageAccountName.value]"
+    }
+  }
+}

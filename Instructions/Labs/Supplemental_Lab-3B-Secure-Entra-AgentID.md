@@ -14,9 +14,7 @@ lab:
 
 # Lab Setup
 
-Lab profile - https://labondemand.com/LabProfile/217879
-
-This lab runs on a Cloud Slice. NOTE - this lab is a work in progress as the technology around the Entra Agent ID is evolving almost daily. The steps as written worked on June 30, 2026. However with regular product changes you may find that the setups are not 100% accruate.  We don't have a lab setup for this lab yet, as it keeps changing. We will add a lab setup, once things stablize.
+Follow these steps to complete the lab. **Note**: This lab is a work in progress as the technology around the Entra Agent ID is evolving almost daily. The steps as written worked on June 30, 2026. However with regular product changes you may find that the setups are not 100% accruate.  We don't have a lab setup for this lab yet, as it keeps changing. We will add a lab setup, once things stablize.
 
 ===
 
@@ -37,7 +35,7 @@ In this lab, you will:
 
 This exercise should take approximately **60** minutes to complete.
 
-> **Note**: This lab uses one account — your **Global Administrator** credentials — to access four different portals: the Microsoft Entra admin center, Microsoft Defender XDR, the Microsoft 365 admin center, and Copilot Studio. Credentials are in the **Resources** tab of your lab environment.
+> **Note**: This lab uses one account — **User1** (`sc500-user1-`), which is the seeded Global Administrator — to access four different portals: the Microsoft Entra admin center, Microsoft Defender XDR, the Microsoft 365 admin center, and Copilot Studio. Use the credentials provided for this account.
 
 ---
 
@@ -45,7 +43,7 @@ This exercise should take approximately **60** minutes to complete.
 
 1. Open the **Azure Portal** at `https://portal.azure.com`
 
-1. Log in as **User-1** using the provided credentials.
+1. Log in as **User1** using the provided credentials.
 
 1. Select **Yes** one the **Stay signed in?** dialog.
 
@@ -70,6 +68,8 @@ This exercise should take approximately **60** minutes to complete.
 1. Select **Go to resource**.
 
 1. Select the **Go to Foundry portal** button.
+
+1. On the Foundry portal resources page, select the **sc500-proj-default** project.
 
 1. Find the box **Build an agent** and select **Start building**
 

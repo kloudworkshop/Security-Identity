@@ -13,35 +13,55 @@ lab:
 
 # Lab Setup
 
-Lab profile - https://labondemand.com/LabProfile/217879
+Complete these steps before starting the exercise to deploy the resources and seed the role assignment used by the access review scenario:
 
-This lab runs on a Cloud Slice. Follow these steps to build out your lab scenarios:
+1. Open the **Azure portal** at `https://portal.azure.com` and sign in with **User1**.
 
-1. Open the **Azure Portal** at `https://portal.azure.com`.
+1. Select the **Cloud Shell** icon (>_) in the portal top bar. If prompted, select **Bash**.
 
-1. Log in with the **User-1** administrator role.
+1. Copy the username provided for **User3**. In Cloud Shell, replace `<User3-UPN>` with that username and run:
 
-1. In the **Search** bar find and open **Deploy a custom template**.
-   
-1. Select **Build your own template in the editor**.
+    ```bash
+    az ad user show --id '<User3-UPN>' --query id --output tsv
+    ```
 
-1. In the menu choose **Load file**.
+1. Copy the returned object ID. You will provide it to the deployment template.
 
-1. Select the file **sc500-lab1c-policy.json** from the Desktop folder.
 
-1. Select **Save**.
+1. Register the Microsoft.PolicyInsights resource provider required for on-demand policy scans:
 
-1. Select **Review + create**.
+    ```bash
+    az provider register --namespace Microsoft.PolicyInsights --wait
+    az provider show --namespace Microsoft.PolicyInsights --query registrationState -o tsv
+    ```
 
-    > **Note**: Deployment may take a few minutes to complete.
+    Confirm the output is `Registered` before continuing.
 
-1. Close the browser.
+1. In the portal search bar, find and open **Deploy a custom template**.
+
+1. Select **Build your own template in the editor**, then select **Load file**.
+
+1. Select **1D-lab-env.json** from the **F:\AllFiles\Lab-1D** folder on the lab VM, then select **Save**.
+
+1. On the deployment page, configure the following values:
+
+    | Setting | Value |
+    |---------|-------|
+    | **Region** | East US, unless your lab environment recommends another region |
+
+    | **User3 Object ID** | Paste the object ID returned by the Cloud Shell command |
+
+1. Select **Review + create**, then select **Create**.
+
+    > **Note**: Deployment normally completes in under two minutes. It creates `sc500-lab1d-rg`, an untagged storage account and virtual network for policy evaluation, and an explicit Contributor assignment for **User3** on the lab subscription.
+
+1. When deployment succeeds, close Cloud Shell and continue to the exercise.
 
 ===
 
 # Configure Azure Policy and Role-Based Access Control
 
-A compliance audit of your organization's AI platform environment has identified two governance gaps. First, no policy exists to enforce required resource tagging — resources in the subscription have no consistent `Environment` tag, making cost allocation and security boundary tracking unreliable. Second, a team member who moved off the AI platform team nine months ago still holds a standing Contributor assignment on the platform resource group, giving them full management access to resources they no longer work with.
+A compliance audit of your organization's AI platform environment has identified two governance gaps. First, no policy exists to enforce required resource tagging — resources in the subscription have no consistent `Environment` tag, making cost allocation and security boundary tracking unreliable. Second, a team member who moved off the AI platform team nine months ago still holds a standing Contributor assignment on the lab subscription, giving them full management access to resources they no longer work with.
 
 Your task is to close both gaps. You will assign a built-in tagging policy to surface non-compliant resources, then deploy a custom policy via Infrastructure as Code to extend tag enforcement to resource groups. You will create a scoped custom role for security reviewers — granting read access to Defender for Cloud posture data and role assignments without elevating them to administrators — and then use an Entra ID Access Review to formally evaluate and remove the unnecessary Contributor access. Finally, you will apply a resource lock to protect the platform's storage account from accidental deletion.
 
@@ -55,15 +75,15 @@ In this lab, you will:
 
 This exercise should take approximately **60** minutes to complete.
 
-> **Note**: This lab uses two accounts: your **Global Administrator** account (your primary lab credentials) and **sc500-user04** (used to complete the Access Review decision as the designated reviewer). Credentials for both accounts are in the **Resources** tab of your lab environment.
+> **Note**: This lab uses the provided account aliases and baseline subscription permissions: **User1** has owner-level access, **User2** has contributor-level access, and **User3** has read-only access. The Lab Setup deployment adds a built-in Contributor assignment for User3 on the lab subscription; the access review removes that assignment while preserving User3's baseline read-only access. Use the credentials provided for all three accounts.
 
 ---
 
 ## Assign a built-in compliance policy
 
-Azure Policy evaluates resources against defined rules and reports compliance without requiring changes to existing resources. A **Deny** effect policy blocks new non-compliant resources from being created; existing resources that already violate the policy appear as **Non-compliant** in the compliance report. You will assign the built-in **Require a tag on resources** policy to `sc500-lab1d-rg`, which will flag `sc500lab1d@lab.LabInstance.Id` (the storage account) and `sc500-lab1d-vm` (the virtual machine) as non-compliant because neither resource has an `Environment` tag. You may see one additional non-compliant resource listed — this is expected.
+Azure Policy evaluates resources against defined rules and reports compliance without requiring changes to existing resources. A **Deny** effect policy blocks new non-compliant resources from being created; existing resources that already violate the policy appear as **Non-compliant** in the compliance report. You will assign the built-in **Require a tag on resources** policy to `sc500-lab1d-rg`, which will flag the pre-provisioned storage account (name starts with **`sc500lab1d`**) and **sc500-lab1d-vnet** virtual network as non-compliant because neither resource has an `Environment` tag.
 
-1. Sign in to the Azure portal `https://portal.azure.com` using your **User-1** credentials.
+1. Sign in to the Azure portal `https://portal.azure.com` using your **User1** credentials.
 
 1. In the search bar, search for and select **`Policy`**.
 
@@ -89,7 +109,7 @@ Azure Policy evaluates resources against defined rules and reports compliance wi
 
     > **Note**: Policy assignments can take up to 30 minutes to fully propagate before compliance evaluation reflects the new assignment. You will trigger an on-demand scan in the next step rather than waiting.
 
-1. Select the **Cloud Shell** icon (>_) in the Azure portal top bar. If prompted to select a shell type, select **Bash**. If prompted to create a storage account, select your subscription and select **Create**.
+1. Select the **Cloud Shell** icon (>_) in the Azure portal top bar. If prompted to select a shell type, select **Bash**. On the Getting started page, select **No storage account required**, select the lab subscription, and then select **Apply**.
 
 1. Run the following command to trigger an on-demand compliance evaluation for the resource group:
 
@@ -107,7 +127,7 @@ Azure Policy evaluates resources against defined rules and reports compliance wi
 
 1. Locate the **sc500-require-env-tag** assignment in the compliance list.
 
-1. Confirm that **`sc500lab1d@lab.LabInstance.Id`** (storage account) and **`sc500-lab1d-vm`** (virtual machine) appear in the non-compliant resources list. You may see one additional resource listed — this is expected and does not affect the lab outcome.
+1. Confirm that the storage account (name starts with **`sc500lab1d`**) and **sc500-lab1d-vnet** virtual network appear in the non-compliant resources list.
 
     > **Note**: Both resources were deployed without an `Environment` tag and therefore violate the policy. The policy assignment also prevents any future resource deployments in `sc500-lab1d-rg` from omitting the `Environment` tag. Existing resources remain operational — compliance evaluation is non-destructive.
 
@@ -117,7 +137,7 @@ Azure Policy evaluates resources against defined rules and reports compliance wi
 
 The built-in policy you assigned enforces tag requirements on individual resources. A complementary policy at the resource group level ensures that any new resource groups created in the subscription are also tagged from the start. Rather than configuring this policy in the portal, you will deploy a pre-written Bicep template that defines and assigns the custom policy at the subscription scope. Deploying governance policy through Infrastructure as Code ensures it is version-controlled, repeatable, and auditable.
 
-The **sc500-lab1d-policy.bicep** file has been pre-staged in your Cloud Shell home directory. It defines a custom **Deny** policy that requires an **Environment** tag on all resource groups and creates a subscription-scope assignment.
+The **sc500-lab1d-policy.bicep** file is provided in the **F:\AllFiles\Lab-1D** folder. It defines a custom **Deny** policy that requires an **Environment** tag on all resource groups and creates a subscription-scope assignment.
 
 1. Open a Cloud Shell (Bash), if it is not already open.
 
@@ -125,7 +145,7 @@ The **sc500-lab1d-policy.bicep** file has been pre-staged in your Cloud Shell ho
 
 1. Select **Upload**.
 
-1. Browse to your **Desktop** folder, then select **sc500-lab1d-policy.bicep** file.
+1. Browse to the **F:\AllFiles\Lab-1D** folder on the lab VM, then select **sc500-lab1d-policy.bicep** file.
 
 1. Select **Open** to upload the file. Wait for the **Successfully uploaded file** message.
 
@@ -160,7 +180,7 @@ The **sc500-lab1d-policy.bicep** file has been pre-staged in your Cloud Shell ho
 
 ## Create a custom security reviewer role
 
-Built-in Azure roles such as **Reader** grant broad read access across all resource types in a scope. When a role is needed for a specific governance function — such as reviewing Defender for Cloud security posture data and role assignments — a custom role with the minimum required permissions is a better fit. You will create a role named **sc500-Security-Reviewer** that grants read access to Microsoft Defender for Cloud data and Azure authorization objects only, then assign it to **User-2**.
+Built-in Azure roles such as **Reader** grant broad read access across all resource types in a scope. When a role is needed for a specific governance function — such as reviewing Defender for Cloud security posture data and role assignments — a custom role with the minimum required permissions is a better fit. You will create a role named **sc500-Security-Reviewer** that grants read access to Microsoft Defender for Cloud data and Azure authorization objects only, then assign it to **User2**.
 
 1. In the Azure portal search bar, search for and select **Resource groups**.
 
@@ -229,81 +249,126 @@ Built-in Azure roles such as **Reader** grant broad read access across all resou
 
 1. On the **Members** tab, confirm **Assign access to** is set to **User, group, or service principal**.
 
-1. Select **+ Select members**, search for and select **sc500-user04**, then select **Select**.
+1. Select **+ Select members**, search for and select **User2**, then select **Select**.
 
 1. Select **Review + assign**, then select **Review + assign** again to save.
 
-    > **Note**: `sc500-user04` now holds the `sc500-Security-Reviewer` role on `sc500-lab1d-rg`. They have read access to Defender for Cloud data and role assignments within this resource group — without any management or write permissions. This role will also be used in the next section: `sc500-user04` is the designated reviewer for the Access Review you are about to create.
+    > **Note**: The `sc500-Security-Reviewer` role itself grants only the defined read permissions. In this lab environment, **User2** also has baseline contributor-level access on the subscription, so User2's effective permissions are broader than this custom role. The exercise demonstrates custom-role definition and assignment; in production, assign this role to a principal without a broader inherited role. User2 is also the designated reviewer in the next section.
 
 ---
 
 ## Evaluate and remediate overprivileged access
 
-`sc500-user05` holds an active **Contributor** role assignment on `sc500-lab1d-rg`. The Contributor role grants full management access — the ability to create, modify, and delete resources — without the ability to manage role assignments. This level of access is appropriate while someone is actively working on a platform, but `sc500-user05` no longer has a business need for it.
+**User3** holds an active **Contributor** role assignment directly on the lab subscription. The Contributor role grants full management access—the ability to create, modify, and delete resources—without permission to manage role assignments. **User3** no longer has a business need for this access.
 
-An **Entra ID Access Review** provides a structured, auditable process for evaluating whether existing role assignments remain appropriate. You will create a review that targets the Contributor role on `sc500-lab1d-rg`, designate `sc500-user04` as the reviewer, then sign in as `sc500-user04` to submit the denial decision. The review will automatically remove the assignment when stopped.
+A Microsoft Entra access review provides a structured, auditable process for deciding whether an existing role assignment remains appropriate. You will verify the seeded assignment, onboard the lab subscription to Privileged Identity Management (PIM), designate **User2** as the reviewer, submit a denial, and confirm that the Contributor assignment is removed. If the tenant does not include the required ID Governance capability, you will use the direct-remediation fallback instead.
+
+1. In the Azure portal, search for and select **Subscriptions**, and then select the subscription used for this lab.
+
+1. Select **Access control (IAM)**, and then select the **Role assignments** tab.
+
+1. Search for **User3** and confirm that **User3** has both the **Contributor** assignment and a baseline read-only assignment with scope **This resource**.
+
+    > **Important**: If the Contributor assignment is missing, stop here. The Lab Setup deployment did not receive the correct **User3 Object ID**, and there is no assignment to review. This is a setup issue, not role-assignment propagation.
 
 1. Navigate to the [Microsoft Entra admin center](https://entra.microsoft.com).
 
-1. In the left menu, expand **ID Governance** and select **Privileged Identity Management**.
+1. In the portal search bar, search for **Privileged Identity Management**, and then select **Privileged Identity Management Browse**.
 
-1. Select **Azure resources**.
+1. On the **Browse** page, under **Subscriptions**, select the lab subscription.
 
-    > **Note**: If prompted to discover resources, select **Discover resources**, find your lab subscription in the list, select it, and select **Manage resource**. Return to **Azure resources** and select your subscription.
+1. Confirm the **Current selection** shows the lab subscription, and then select **Manage resource**.
 
-1. From the list of Azure resources, select your lab subscription.
+    > **Note**: Onboarding opens the subscription's PIM overview and grants the PIM service principal the access it needs to manage privileged assignments.
 
-1. In the left menu, under **Manage**, select **Access reviews**.
+1. Under **Manage**, select **Access reviews**.
 
-1. Select **New** to create a new access review.
+    > **Important**: Azure resource role access reviews require Microsoft Entra ID P2 or Microsoft Entra ID Governance. The user creating the review must also have Owner or User Access Administrator permissions. In this lab, **User1** has the required subscription permissions. If the page displays **You don't have access**, waiting for role propagation will not resolve the message. Skip to **Fallback: remove the assignment directly**.
 
-1. On the **Create an access review** screen, configure the review **details** as follows:
+### Create and complete the access review
+
+Complete this subsection only if the **Access reviews** page opens successfully.
+
+1. Select **New**.
+
+1. On the **Create an access review** page, configure the review details:
 
     | Setting | Value |
     |---------|-------|
     | **Review name** | `sc500-contributor-review` |
-    | **Description** | `Review of Contributor access on the AI platform resource group` |
+    | **Description** | `Review of Contributor access on the lab subscription` |
     | **Start date** | Today's date |
     | **Frequency** | One time |
     | **Duration (in days)** | 3 |
 
-1. Under **Users scope**, configure the following:
+1. Under **Users scope**, select **Users**.
 
-    | Setting | Value |
-    |---------|-------|
-    | **Scope** | All users and groups |
-    | **Role** | `Contributor` |
-    | **Assignment type** | Active assignments only |
+1. Under **Review role membership**, select **Contributor**.
 
-1. Under **Reviewers**, configure the following:
+1. For **Assignment type**, select **Active assignments only**.
 
-    | Setting | Value |
-    |---------|-------|
-    | **Reviewers** | Selected users |
-    | **Select reviewers** | User-2  |
+1. Under **Reviewers**, select **Selected user(s) or group(s)**, and then select **Select reviewers**.
 
-1. Under **Upon completion settings**, configure the following:
+1. Select **User2**, and then confirm the selection.
+
+    > **Important**: If the **Select reviewers** pane remains blank after 10 seconds, close the pane and skip to **Fallback: remove the assignment directly**. This is a hosted-tenant picker issue; waiting for role propagation does not populate the pane.
+
+1. Expand **Upon completion settings** and configure:
 
     | Setting | Value |
     |---------|-------|
     | **Auto apply results to resource** | Enable |
-    | **If reviewer doesn't respond** | No change |
+    | **If reviewers don't respond** | No change |
 
 1. Select **Start** to create and activate the access review.
 
-    > **Note**: With **Auto apply results to resource** enabled, review decisions are applied automatically when the review is stopped or reaches its end date. You do not need to click a separate Apply button.
+1. Open a new **InPrivate** or **Private** browser window and sign in to `https://entra.microsoft.com` using the credentials provided for **User2**.
 
-    > **Note**: Access Reviews create an auditable, timestamped record of the reviewer's decision and the resulting access change. In a production environment, this record provides evidence of due diligence for compliance frameworks that require periodic access certification — including SOC 2, ISO 27001, and NIST 800-53 AC-6.
+1. Browse to **ID Governance > Privileged Identity Management > Review access**.
+
+1. Select **sc500-contributor-review**. Select the entry for **User3**, choose **Deny**, enter `No current business need for Contributor access` as the reason, and submit the decision.
+
+1. Close the InPrivate window and return to the **User1** session.
+
+1. Return to **Privileged Identity Management Browse**, select the lab subscription, select **Manage resource**, and then select **Access reviews**.
+
+1. Select **sc500-contributor-review**, select **Stop**, and confirm the action.
+
+1. Refresh the review until its status changes from **Completed** or **Applying** to **Applied**. This normally takes a few minutes.
+
+1. Skip to **Verify the remediation**.
+
+### Fallback: remove the assignment directly
+
+Complete this subsection if the **Access reviews** page displays **You don't have access** or if the **Select reviewers** pane is blank.
+
+1. Return to the lab subscription in the Azure portal.
+
+1. Select **Access control (IAM) > Role assignments**.
+
+1. Search for **User3**, select the selection box for the **Contributor** assignment with scope **This resource**, and then select **Delete** on the command bar. Confirm the deletion.
+
+    > **Note**: Direct removal remediates the overprivileged access but does not create the access-review audit record. In production, enable the required Microsoft Entra ID Governance licensing and use recurring access reviews for formal access certification.
+
+### Verify the remediation
+
+1. In the lab subscription, return to **Access control (IAM) > Role assignments**. Refresh the page and search for **User3**.
+
+1. Confirm that **User3** no longer has the **Contributor** role. The baseline read-only assignment remains and is expected.
+
+    > **Note**: If you completed the access-review path, the completed review preserves an auditable, timestamped record of the reviewer, decision, justification, and resulting access change.
 
 ---
 
 ## Apply a resource lock
 
-Resource locks prevent accidental or unauthorized deletion of critical resources. A **CanNotDelete** lock allows all read and write operations on a resource but blocks delete operations — even for users with the Owner role. You will apply a lock to `sc500lab1d@lab.LabInstance.Id` and verify that the lock prevents deletion.
+Resource locks prevent accidental or unauthorized deletion of critical resources. A **CanNotDelete** lock allows all read and write operations on a resource but blocks delete operations — even for users with the Owner role. You will apply a lock to the pre-provisioned storage account in `sc500-lab1d-rg` and verify that the lock prevents deletion.
+
+> **Note**: The `sc500-lab1d-rg` resource group contains exactly one storage account, and its name begins with **`sc500lab1d`** followed by an 8-character suffix unique to your lab subscription. Select it whenever the lab refers to it.
 
 1. In the Azure portal search bar, search for and select **Storage accounts**.
 
-1. Select **sc500lab1d@lab.LabInstance.Id**.
+1. Select the storage account whose name starts with **`sc500lab1d`** (there is only one in `sc500-lab1d-rg`).
 
 1. In the left menu, under **Settings**, select **Locks**.
 
@@ -339,9 +404,9 @@ In this lab, you applied governance controls across four dimensions: policy comp
 
 You assigned the built-in **Require a tag on resources** policy to surface existing non-compliant resources missing an `Environment` tag, and triggered an on-demand compliance scan to observe results immediately rather than waiting for the standard evaluation cycle. You then deployed a complementary custom policy at the subscription scope using a pre-written Bicep template — demonstrating that governance rules, like application code, can be version-controlled and deployed repeatably through Infrastructure as Code.
 
-You created a custom Azure role — `sc500-Security-Reviewer` — with exactly the permissions needed for a security auditor function: read access to Defender for Cloud posture data and role assignments, and nothing else. You assigned this role to `sc500-user04` following the principle of least privilege, ensuring the reviewer can observe the security state without any management authority over resources.
+You created a custom Azure role — `sc500-Security-Reviewer` — whose definition contains only the read permissions needed for a security auditor function. You assigned it to **User2** and distinguished the permissions granted by the custom role from User2's broader baseline contributor-level access on the lab subscription.
 
-You used an Entra ID Access Review to formally evaluate `sc500-user05`'s standing Contributor assignment. Rather than removing access directly, the review process created an auditable record of the decision — who reviewed, the justification, and the resulting action. This audit trail satisfies compliance requirements for periodic access certification. Finally, you applied a CanNotDelete resource lock to the platform storage account, demonstrating that identity-based access control and resource locks serve complementary functions: access control governs who can act, while locks create an explicit barrier that even highly privileged identities cannot bypass without a deliberate removal step.
+Where the tenant supported Entra ID Governance, you used an Entra ID Access Review to formally evaluate **User3**'s standing Contributor assignment. That review path created an auditable record of the reviewer, justification, decision, and resulting action. Where access reviews were unavailable, you used Azure RBAC to remove the assignment directly and documented why formal access certification requires the additional governance capability. Finally, you applied a CanNotDelete resource lock to the platform storage account, demonstrating that identity-based access control and resource locks serve complementary functions: access control governs who can act, while locks create an explicit barrier that even highly privileged identities cannot bypass without a deliberate removal step.
 
 You have successfully completed this exercise.
 

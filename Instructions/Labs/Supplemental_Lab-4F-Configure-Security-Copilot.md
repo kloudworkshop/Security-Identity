@@ -13,9 +13,7 @@ lab:
 
 # Lab Setup
 
-Lab profile - Bring Your Own Subscription (BYOS). 
-
-This lab requires both a Security Admin role and a Global Admin role to run. Additionally, it requires access to SCUs, and a Microsoft Security Copilot license. Most ALH hosted environments cannot provide this within their hosted lab environment. Please feel free to read over the steps to learn about the features and capabilities. If you have a personally available subscription that meets the requirements, the lab will work as built. Please use as needed. The Global Admin and Security Admin roles have privileged access that can be used to exploit systems, so its use has to be limited.
+Use an Azure subscription and Microsoft Entra tenant that you are authorized to administer. This lab requires the **Security Administrator** and **Global Administrator** roles, Security Compute Units (SCUs), and a Microsoft Security Copilot license. Use privileged roles only for the duration of the exercise and follow your organization's least-privilege practices.
 
 ===
 
@@ -50,11 +48,11 @@ This exercise should take approximately **45** minutes to complete.
 
 ## Provision Security Copilot Capacity
 
-1. Sign in to [https://securitycopilot.microsoft.com](https://securitycopilot.microsoft.com) using your Global Administrator account.
+1. Sign in to [https://securitycopilot.microsoft.com](https://securitycopilot.microsoft.com) using your **User1** account.
 
 1. Start the setup flow for capacity provisioning.
 
-1. Provision **1 SCU** in **East US**.
+1. Provision **1 SCU** in **East US**, unless your lab environment directs you to use another region.
 
 1. Confirm provisioning completes and the workspace becomes available.
 
@@ -62,7 +60,7 @@ This exercise should take approximately **45** minutes to complete.
 
     | Field | Value |
     |-------|-------|
-    | Region | East US |
+    | Region | East US, unless your lab environment directs otherwise |
     | SCU count | 1 |
 
 ---
@@ -79,7 +77,7 @@ This exercise should take approximately **45** minutes to complete.
 
 1. Confirm your account is listed as workspace owner.
 
-1. Assign **Security Copilot Contributor** role to **sc500-user12**.
+1. Assign **Security Copilot Contributor** role to **User3**.
 
 1. Confirm the role assignment is visible.
 
