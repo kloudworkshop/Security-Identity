@@ -92,7 +92,7 @@ Before applying any controls, confirm the current state of the pre-provisioned e
 
 > **Note**: The pre-provisioned API Management instance name begins with **`sc500-lab3c-apim-`** followed by an 8-character suffix that is unique to your lab subscription. Throughout this lab, `<apim-name>` refers to that instance. The `sc500-lab3c-rg` resource group contains exactly one API Management instance — select it whenever the lab asks for `<apim-name>`.
 
-1. Sign in to the [Azure portal](https://portal.azure.com) using your **User1** credentials.
+1. Sign in to the **Azure portal** at `https://portal.azure.com` using your **User1** credentials.
 
 1. In the search bar, search for and select **API Management services**.
 
@@ -114,7 +114,7 @@ Before applying any controls, confirm the current state of the pre-provisioned e
 
 ### Review the Foundry model endpoint
 
-1. Open a new browser tab and navigate to the [Microsoft Foundry portal](https://ai.azure.com).
+1. Open a new browser tab, navigate to the **Microsoft Foundry portal** at `https://ai.azure.com`, and sign in.
 
 1. If a New Foundry project opens, select the project name in the upper-left corner, and then select **View all resources**.
 
@@ -249,7 +249,7 @@ With the token rate limit policy and subscription key authentication in place, v
 
 Content safety guardrails are applied at the Foundry layer — they inspect both the prompt sent to the model and the model's response, and block content that exceeds configured harm thresholds. You will create a guardrail with Prompt Shield enabled and apply it to the gpt-5.4-mini deployment.
 
-1. Return to the **Azure AI Foundry portal** tab (or navigate to [https://ai.azure.com](https://ai.azure.com)).
+1. Return to the **Azure AI Foundry portal** tab (or navigate to `https://ai.azure.com`).
 
 1. Select the **sc500-lab3c-foundry** project.
 
