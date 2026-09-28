@@ -17,7 +17,8 @@ Complete these steps before starting the exercise to deploy the resources and se
 
 1. Open the **Azure portal** at `https://portal.azure.com` and sign in with **User1**.
 
-1. Select the **Cloud Shell** icon (>_) in the portal top bar. If prompted, select **Bash**.
+1. In the Azure portal top bar, select the **Cloud Shell** icon (**>_**). If prompted to select a shell type, select **Bash**.
+On the **Getting started** page, select **No storage account required**, select the lab subscription, and then select **Apply**.
 
 1. Copy the username provided for **User3**. In Cloud Shell, replace `<User3-UPN>` with that username and run:
 
@@ -109,7 +110,7 @@ Azure Policy evaluates resources against defined rules and reports compliance wi
 
     > **Note**: Policy assignments can take up to 30 minutes to fully propagate before compliance evaluation reflects the new assignment. You will trigger an on-demand scan in the next step rather than waiting.
 
-1. Select the **Cloud Shell** icon (>_) in the Azure portal top bar. If prompted to select a shell type, select **Bash**. On the Getting started page, select **No storage account required**, select the lab subscription, and then select **Apply**.
+1. Select the **Cloud Shell** icon (>_) in the Azure portal top bar.
 
 1. Run the following command to trigger an on-demand compliance evaluation for the resource group:
 
@@ -271,7 +272,7 @@ A Microsoft Entra access review provides a structured, auditable process for dec
 
     > **Important**: If the Contributor assignment is missing, stop here. The Lab Setup deployment did not receive the correct **User3 Object ID**, and there is no assignment to review. This is a setup issue, not role-assignment propagation.
 
-1. Navigate to the [Microsoft Entra admin center](https://entra.microsoft.com).
+1. Navigate to the **Microsoft Entra admin center** at `https://entra.microsoft.com`.
 
 1. In the portal search bar, search for **Privileged Identity Management**, and then select **Privileged Identity Management Browse**.
 
