@@ -15,7 +15,7 @@ lab:
 
 Complete these steps before starting the exercise to deploy the resources and seed the role assignment used by the access review scenario:
 
-1. Open the **Azure portal** at `https://portal.azure.com` and sign in with **User1**.
+1. Open the **Azure portal** at `https://portal.azure.com` and sign in with **your Admin account**.
 
 1. Select the **Cloud Shell** icon (>_) in the portal top bar. If prompted, select **Bash**.
 
@@ -75,7 +75,7 @@ In this lab, you will:
 
 This exercise should take approximately **60** minutes to complete.
 
-> **Note**: This lab uses the provided account aliases and baseline subscription permissions: **User1** has owner-level access, **User2** has contributor-level access, and **User3** has read-only access. The Lab Setup deployment adds a built-in Contributor assignment for User3 on the lab subscription; the access review removes that assignment while preserving User3's baseline read-only access. Use the credentials provided for all three accounts.
+> **Note**: This lab uses the provided account aliases and baseline subscription permissions: **your Admin** has owner-level access, **User2** has read-only access, and **User3** has no access. The Lab Setup deployment adds a built-in Contributor assignment for User3 on the lab subscription; the access review removes that assignment while preserving User3's baseline read-only access. Use the credentials provided for all three accounts.
 
 ---
 
@@ -273,9 +273,9 @@ A Microsoft Entra access review provides a structured, auditable process for dec
 
 1. Navigate to the [Microsoft Entra admin center](https://entra.microsoft.com).
 
-1. In the portal search bar, search for **Privileged Identity Management**, and then select **Privileged Identity Management Browse**.
+1. In the portal search bar, search for **Privileged Identity Management**, and then select **Privileged Identity Management**.
 
-1. On the **Browse** page, under **Subscriptions**, select the lab subscription.
+1. Click **Azure Resources**, under **Subscriptions**, select the lab subscription.
 
 1. Confirm the **Current selection** shows the lab subscription, and then select **Manage resource**.
 
@@ -283,7 +283,7 @@ A Microsoft Entra access review provides a structured, auditable process for dec
 
 1. Under **Manage**, select **Access reviews**.
 
-    > **Important**: Azure resource role access reviews require Microsoft Entra ID P2 or Microsoft Entra ID Governance. The user creating the review must also have Owner or User Access Administrator permissions. In this lab, **User1** has the required subscription permissions. If the page displays **You don't have access**, waiting for role propagation will not resolve the message. Skip to **Fallback: remove the assignment directly**.
+    > **Important**: Azure resource role access reviews require Microsoft Entra ID P2 or Microsoft Entra ID Governance. The user creating the review must also have Owner or User Access Administrator permissions. In this lab, **your Admin account** has the required subscription permissions. If the page displays **You don't have access**, waiting for role propagation will not resolve the message. Skip to **Fallback: remove the assignment directly**.
 
 ### Create and complete the access review
 
@@ -299,11 +299,10 @@ Complete this subsection only if the **Access reviews** page opens successfully.
     | **Description** | `Review of Contributor access on the lab subscription` |
     | **Start date** | Today's date |
     | **Frequency** | One time |
-    | **Duration (in days)** | 3 |
-
+    
 1. Under **Users scope**, select **Users**.
 
-1. Under **Review role membership**, select **Contributor**.
+1. Click **Select a role**, select **Contributor**.
 
 1. For **Assignment type**, select **Active assignments only**.
 
@@ -328,7 +327,7 @@ Complete this subsection only if the **Access reviews** page opens successfully.
 
 1. Select **sc500-contributor-review**. Select the entry for **User3**, choose **Deny**, enter `No current business need for Contributor access` as the reason, and submit the decision.
 
-1. Close the InPrivate window and return to the **User1** session.
+1. Close the InPrivate window and return to the **your Admin account** session.
 
 1. Return to **Privileged Identity Management Browse**, select the lab subscription, select **Manage resource**, and then select **Access reviews**.
 
@@ -354,7 +353,7 @@ Complete this subsection if the **Access reviews** page displays **You don't hav
 
 1. In the lab subscription, return to **Access control (IAM) > Role assignments**. Refresh the page and search for **User3**.
 
-1. Confirm that **User3** no longer has the **Contributor** role. The baseline read-only assignment remains and is expected.
+1. Confirm that **User3** no longer has the **Contributor** role. This may take a while to change.
 
     > **Note**: If you completed the access-review path, the completed review preserves an auditable, timestamped record of the reviewer, decision, justification, and resulting access change.
 
@@ -414,4 +413,4 @@ You have successfully completed this exercise.
 
 ## Clean up
 
-The lab environment is automatically reset at the end of the session. No manual resource deletion is required.
+Use the Azure portal to delete the sc500-lab1d-rg resource group.
