@@ -36,9 +36,9 @@ This exercise should take approximately **45** minutes to complete.
 
 ## Assign a PIM-eligible role
 
-In this section, you assign the Conditional Access Administrator role to **Adele Vance** as an eligible assignment. An eligible assignment means the user does not hold the role permanently — they must request and activate it each time they need it.
+In this section, you assign the Conditional Access Administrator role to **USER1** as an eligible assignment. An eligible assignment means the user does not hold the role permanently — they must request and activate it each time they need it.
 
-1. Sign in to the Microsoft Entra admin center at `https://entra.microsoft.com` as **MOD Administrator** using the credentials provided (sign-in name `admin@<your-tenant>.onmicrosoft.com`).
+1. Sign in to the Microsoft Entra admin center at `https://entra.microsoft.com` with your Admin account using the credentials provided by your instructor.
 
 1. In the left navigation, expand **ID Governance** and select **Privileged Identity Management**.
 
