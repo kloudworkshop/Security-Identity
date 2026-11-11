@@ -1,0 +1,25 @@
+Login to https:\\portal.azure.com using the admin account provided by your Instructor
+If nessessary complete Multi Factor Authentication Registration.
+
+As the course covers technologies that can take between 12 to 24 hours to generate any results or be available
+to configure we are going to complete the steps now to minimise wait time later.
+
+ENABLE DEFENDER FOR CLOUD
+On the Azure portal home page, type Defender in the top search bar and select Defender for Cloud.
+In the Defender for Cloud portal, expand Management and then click Environment Settings.
+At the bottom of the main pane expand Tenant Root Group and then select your Subscription.
+(If Subscription reports as Unregistered, wait 1 min & refresh page).
+At the top of the page select Enable All Plans.
+In the Plan Selection popout, select Microsoft Defender for APIs Plan 1 anc click Save.
+Confirm that all plans report a status of ON and click the top Save button.
+After approx 2 mins you should get notifications of success.
+Return to the Home page.
+
+ENABLE MICROSOFT SENTINEL
+On the Azure portal home page, type Sentinel in the top search bar and select Microsoft Sentinel.
+Click +Create, and then +Create a new workspace.
+Create a new Resource Group called SC500MS and in the name box type MySentinel.
+Click Review & Create and after validation click Create.
+Once the deployment is complete type Sentinel in the top search bar and select Microsoft Sentinel.
+Click +Create, and then select MySentinel and click add.
+Wait for 1 min for Sentinel to deploy.
