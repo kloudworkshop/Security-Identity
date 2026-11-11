@@ -15,7 +15,7 @@ lab:
 
 Follow these steps to deploy the resources used in the lab:
 
-1. Open the **Azure portal** at `https://portal.azure.com` and sign in with **User1**.
+1. Open the **Azure portal** at `https://portal.azure.com` and sign in with **your Admin account**.
 
 1. In the portal top bar, select the **Cloud Shell** icon (**>_**). If prompted, select **Bash** and **No storage account required**.
 
@@ -38,6 +38,8 @@ Follow these steps to deploy the resources used in the lab:
 1. On the **Basics** page, select the existing resource group **sc500-lab1c-rg** and confirm **Location** is `centralus`.
 
 1. Select **Review + create**, and then select **Create**.
+
+1. If the template fails to deploy due to unavailability of SKU, go back, edit the location to use WestUS3 and the SKU to P3v2.
 
 1. Wait until the deployment shows **Succeeded** before continuing.
 
@@ -74,7 +76,7 @@ Azure Key Vault supports two permission models: **Vault access policies** (the l
 
 > **Note**: Key Vault names must be globally unique across all Azure subscriptions. In the next step you will pick your own name that begins with **`sc500-kv-`** (for example, `sc500-kv-yourinitials-1234`). Throughout the rest of this lab, `<your-kv-name>` refers to whatever name you entered here — write it down or leave a Notepad window open with it, since you will reuse it in later sections.
 
-1. Sign in to the **Azure portal** using `https://portal.azure.com` using your **User1** credentials.
+1. Sign in to the **Azure portal** using `https://portal.azure.com` using your **Admin** credentials.
 
 2. In the search bar, search for and select **Key vaults**.
 
@@ -136,7 +138,7 @@ The `<app-service-name>` App Service has a system-assigned managed identity that
 
 1. On the **Members** tab, confirm **Assign access to** is set to **User, group, or service principal**.
 
-1. Select **+ Select members**, search for and select your **User1** account (the account you are currently signed in with), then select **Select**.
+1. Select **+ Select members**, search for and select your **Admin** account (the account you are currently signed in with), then select **Select**.
 
 1. Select **Review + assign**, then select **Review + assign** again to save.
 
@@ -148,7 +150,7 @@ The `<app-service-name>` App Service has a system-assigned managed identity that
 
 1. On the **Members** tab, confirm **Assign access to** is set to **User, group, or service principal**.
 
-1. Select **+ Select members**, search for and select your **User1** account (the account you are currently signed in with), then select **Select**.
+1. Select **+ Select members**, search for and select your **Admin** account (the account you are currently signed in with), then select **Select**.
 
 1. Select **Review + assign**, then select **Review + assign** again to save.
 
@@ -182,9 +184,9 @@ The `<app-service-name>` App Service has a system-assigned managed identity that
 
     | Principal | Role |
     |-----------|------|
-    | User1 | Key Vault Secrets Officer |
-    | User1 | Key Vault Crypto Officer |
-    | <app-service-name> | Key Vault Secrets User |
+    | Admin | Key Vault Secrets Officer |
+    | Admin | Key Vault Crypto Officer |
+    | App Service SC500 | Key Vault Secrets User |
     | User2 | Key Vault Reader |
 
     > **Note**: In a production environment, consider making the **Key Vault Secrets Officer** and **Key Vault Crypto Officer** assignments eligible through Privileged Identity Management (PIM) rather than active. This removes standing data-plane access entirely — administrators activate the role just-in-time when they need to manage vault contents, and access automatically expires.
@@ -258,7 +260,7 @@ The **Key Vault Reader** role grants management-plane access only — a user ass
 
     > **Note**: The Key Vault Reader role includes `Microsoft.KeyVault/vaults/read` (management plane) but does not include `Microsoft.KeyVault/vaults/secrets/getSecret/action` (data plane). This means **User2** can enumerate secrets but cannot retrieve their values — precisely the boundary that separates the Reader role from the Secrets User role.
 
-1. Close the InPrivate browser window and return to your User1 browser session.
+1. Close the InPrivate browser window and return to your Admin browser session.
 
 ---
 
@@ -270,7 +272,7 @@ When managed identity is enabled on an App Service, the runtime injects two envi
 
 > **Note**: Managed identity requires a **Basic (B1) tier** App Service or higher. The Free (F1) tier does not support managed identities. The setup template deploys this app on B1.
 
-1. Confirm you are signed in to the Azure portal at `https://portal.azure.com` as **User1**. If the InPrivate window from the previous section is still active, close it first.
+1. Confirm you are signed in to the Azure portal at `https://portal.azure.com` as **Admin**. If the InPrivate window from the previous section is still active, close it first.
 
 1. Open **App Services**, and then select **<app-service-name>**.
 
@@ -434,4 +436,3 @@ If you want to clean up before the session ends:
 1. Navigate to the [Azure portal](https://portal.azure.com).
 1. Navigate to **Resource groups** and select **sc500-lab1c-rg**.
 1. Select **Delete resource group**, enter the resource group name to confirm, and select **Delete**.
-1. In **Microsoft Defender for Cloud** → **Management** → **Environment settings**, select your subscription and set the **Key Vault** plan to **Off**, then select **Save**.
