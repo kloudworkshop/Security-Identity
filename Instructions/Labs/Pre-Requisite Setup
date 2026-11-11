@@ -4,7 +4,7 @@ If nessessary complete Multi Factor Authentication Registration.
 As the course covers technologies that can take between 12 to 24 hours to generate any results or be available
 to configure we are going to complete the steps now to minimise wait time later.
 
-ENABLE DEFENDER FOR CLOUD
+**ENABLE DEFENDER FOR CLOUD**
 On the Azure portal home page, type Defender in the top search bar and select Defender for Cloud.
 In the Defender for Cloud portal, expand Management and then click Environment Settings.
 At the bottom of the main pane expand Tenant Root Group and then select your Subscription.
