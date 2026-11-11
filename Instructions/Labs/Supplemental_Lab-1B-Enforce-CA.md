@@ -13,7 +13,7 @@ lab:
 
 # Lab Setup
 
-This lab runs on a M365 Tenant with no special configuration needed.
+This lab runs on a M365 Tenant with Entra ID P1 License.
 
 ===
 
@@ -39,7 +39,7 @@ This exercise should take approximately **45** minutes to complete.
 
 Conditional Access policies are built from two parts: assignments (who and what the policy applies to) and access controls (what happens when the conditions are met). You will create a policy that targets a specific user and requires MFA when that user accesses the Azure portal.
 
-1. Sign in to the **Microsoft Entra admin center** at `https://entra.microsoft.com` using your **MOD Administrator** credentials.
+1. Sign in to the **Microsoft Entra admin center** at `https://entra.microsoft.com` using your **Admin account** credentials.
 
 1. In the left navigation, expand **Entra ID** and select **Conditional Access**.
 
@@ -51,7 +51,7 @@ Conditional Access policies are built from two parts: assignments (who and what 
 
 1. On the opened page, choose **Select users and groups**, then mark the **Users and groups** checkbox.
 
-1. Select **Select**, search for and select **Adele Vance**, then select **Select** to confirm.
+1. Select **Select**, search for and select **USER2**, then select **Select** to confirm.
 
     > **Note**: Limiting the policy to a single named user lets you validate behavior without affecting administrators or other users. In production, you would expand the scope after confirming the policy works as expected.
 
@@ -87,8 +87,8 @@ Report-only mode records what a policy would do without blocking or requiring an
 
     | Setting | Value |
     |---------|-------|
-    | **Select identity type - Users** | use the **Edit user** to select **Adele Vance** |
-    | **Select target type - Cloud apps** | Microsoft Forms |
+    | **Select identity type - Users** | use the **Edit user** to select **USER2** |
+    | **Select target type - Cloud apps** | Microsoft Office 365 Portal |
     | **Sign-in conditions - Device Platform** | Windows |
     | **Sign-in conditions - Client App** | Browser |
     | All other settings | Leave at defaults |
@@ -99,9 +99,9 @@ Report-only mode records what a policy would do without blocking or requiring an
 
 1. Under **Policies that will apply**, confirm that **sc500-require-mfa-portal** appears with a **Grant** control of **Require multifactor authentication**.
 
-    This confirms the policy is correctly scoped — it would enforce MFA for Adele Vance accessing Microsoft Forms.
+    This confirms the policy is correctly scoped — it would enforce MFA for USER2 accessing Microsoft Forms.
 
-    > **Note**: If the policy does not appear in the results, verify that Adele Vance is listed under **Included users** in the policy assignments and that **Microsoft Azure Management** is the selected cloud app. Correct any issues before proceeding.
+    > **Note**: If the policy does not appear in the results, verify that USER2 is listed under **Included users** in the policy assignments and that **Microsoft Office 365 Portal** is the selected cloud app. Correct any issues before proceeding.
 
 1. Close the **What If** pane.
 
@@ -113,7 +113,7 @@ The simulation confirmed the policy is correctly configured. You will now switch
 
 1. On the **Conditional Access | Policies** page, select **sc500-require-mfa-portal** to open it.
 
-1. Set **Enable policy** to **On**.
+1. Click View or Edit and then Set **Enable policy** to **On**.
 
 1. Select **Save**.
 
@@ -121,19 +121,19 @@ The simulation confirmed the policy is correctly configured. You will now switch
 
 1. Open a new **InPrivate** or **Private** browser window.
 
-1. Navigate to Microsoft Forms at `https://forms.microsoft.com`.
+1. Navigate to Microsoft Forms at `https://microsoft365.com`.
 
-1. Sign in to the **Adele Vance** account using the credentials provided.
+1. Sign in to the **USER2** account using the credentials provided.
 
-1. After entering the password, confirm that Entra ID prompts Adele with a **"More information required"** screen requesting an MFA method. This confirms the Conditional Access policy is active and requiring step-up authentication.
+1. After entering the password, confirm that Entra ID prompts USER2 with a **"Lets keep your account secure"** screen requesting an MFA method. This confirms the Conditional Access policy is active and requiring step-up authentication.
 
-    > **Note**: If Adele is signed in without any prompt, verify that the policy state is **On** (not Report-only), that Adele Vance is in the **Included users** scope, and that no exclusions apply. Also confirm you opened an **InPrivate** window so cached credentials do not skip the flow.
+    > **Note**: If USER2 is signed in without any prompt, verify that the policy state is **On** (not Report-only), that USER2 is in the **Included users** scope, and that no exclusions apply. Also confirm you opened an **InPrivate** window so cached credentials do not skip the flow.
 
-1. Register an MFA method. The easiest choice is **Phone (SMS or voice call)** using your own mobile number — this is the fastest path and does not require installing an authenticator app for the lab. If you prefer, install the **Microsoft Authenticator** app on your phone and register that method instead. Complete the challenge with the method you just registered.
+1. Register for MFA method.
 
-    > **Note**: In a production environment, Adele's IT team would enforce a specific method (typically Microsoft Authenticator via Authentication Method Policies). For the purpose of this lab, using your own device to complete the registration flow is a realistic simulation of the learner's own first-time MFA experience.
+    > **Note**: In a production environment, USER2's IT team would enforce a specific method (typically Microsoft Authenticator via Authentication Method Policies). For the purpose of this lab, using your own device to complete the registration flow is a realistic simulation of the learner's own first-time MFA experience.
 
-1. Confirm that you are now signed in to Microsoft Forms. The Conditional Access policy required step-up authentication and granted access after the MFA challenge was completed successfully.
+1. Confirm that you are now signed in to Microsoft. The Conditional Access policy required step-up authentication and granted access after the MFA challenge was completed successfully.
 
 1. Close the InPrivate browser window.
 
@@ -154,7 +154,7 @@ The AI platform team needs a registered application identity in Entra ID so thei
     | Setting | Value |
     |---------|-------|
     | Name | **`sc500-ai-platform-app`** |
-    | Supported account types | **Single tenant only - Contoso** |
+    | Supported account types | **Single tenant only** |
     | Redirect URI | Leave blank |
 
 1. Select **Register**.
