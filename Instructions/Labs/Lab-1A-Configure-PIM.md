@@ -56,7 +56,7 @@ In this section, you assign the Conditional Access Administrator role to **USER1
 
 1. Select **Next**, then select **Assign** to save the assignment.
 
-1. On the **Assignments** page, confirm that **Adele Vance** appears under the **Eligible assignments** tab with the role **Conditional Access Administrator**.
+1. On the **Assignments** page, confirm that **USER1** appears under the **Eligible assignments** tab with the role **Conditional Access Administrator**.
 
     > **Note**: An eligible assignment does not grant access — it only enables the user to request activation. No access is active at this point.
 
