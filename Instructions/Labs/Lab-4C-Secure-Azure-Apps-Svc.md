@@ -15,7 +15,7 @@ lab:
 
 Follow these steps to deploy the resources used in the lab:
 
-1. Open the **Azure portal** at `https://portal.azure.com` and sign in with **User1**.
+1. Open the **Azure portal** at `https://portal.azure.com` and sign in with **Admin**.
 
 
 1. In the portal search bar, find and open **Deploy a custom template**.
@@ -29,7 +29,7 @@ Follow these steps to deploy the resources used in the lab:
 
 1. Select **Review + create**, and then select **Create**.
 
-1. Wait until the deployment shows **Succeeded** before continuing.
+1. Wait until the deployment shows **Succeeded** before continuing. If template fails validation due to quota, edit JSON location to WestUs3 &  Microsoft.web/serverfams to use P3V2 size.
 
 ===
 
@@ -65,9 +65,9 @@ This exercise should take approximately **60** minutes to complete.
 1. Confirm the following resources are present:
 
     - **sc500-lab4c-agw**
-    - **<apim-name>**
-    - **<web-app-name>**
-    - **<function-app-name>**
+    - **API Management Service**
+    - **App Service**
+    - **Function App**
 
 1. Open **sc500-lab4c-agw** and confirm the attached WAF policy is currently in **Detection** mode.
 
@@ -75,9 +75,11 @@ This exercise should take approximately **60** minutes to complete.
 
 ## Validate WAF Detection Mode
 
-1. Sign in to the [Azure portal](https://portal.azure.com) with your **User1** account.
+1. Sign in to the [Azure portal](https://portal.azure.com) with your **Admin** account.
 
 1. Open **Application gateways** and select **sc500-lab4c-agw**.
+
+1. Record the Frontend Public IP address for later.
 
 1. Open the attached WAF policy and confirm:
 
@@ -86,7 +88,7 @@ This exercise should take approximately **60** minutes to complete.
 
 1. Open **Cloud Shell** in the Azure portal.
 
-1. Send a test request using the Application Gateway public endpoint and a SQL-injection-style payload:
+1. Send a test request using the Application Gateway public endpoint and a SQL-injection-style payload replacing <agw-public-ip> with the IP Address you recorded earlier:
 
     ```bash
     curl -H "X-Scan-Test: 1" "http://<agw-public-ip>/?id=1+UNION+SELECT+NULL,username,password+FROM+users--"
@@ -132,7 +134,7 @@ This exercise should take approximately **60** minutes to complete.
 
 ## Enable App Service Authentication
 
-1. Open **App Services** and select **<web-app-name>**.
+1. Open **App Services** and select **your Web App Service**.
 
 1. Open **Authentication**, and then select **Add identity provider**.
 
@@ -144,6 +146,7 @@ This exercise should take approximately **60** minutes to complete.
     |---------|-------|
     | **Tenant configuration** | Workforce configuration (current tenant) |
     | **App registration type** | Create new app registration |
+   | **Client Secret Expiration** | Recommended: 180 days |
     | **Supported account types** | Current tenant - Single tenant |
     | **Restrict access** | Require authentication |
     | **Unauthenticated requests** | HTTP 302 Found redirect |
@@ -205,17 +208,21 @@ This exercise should take approximately **60** minutes to complete.
 
 ## Apply Network Restrictions to App Service and Function App
 
-1. In **<web-app-name>**, open **Networking** and then **Access restrictions**.
+1. In **your Web App**, open **Networking** and then Click Enabled with no access restriction.
 
-1. Add an allow rule for the approved subnet associated with Application Gateway.
+1. Select Enabled from select virtual networks and IP Address and then click +Add.
 
-1. Set default action to **Deny** for unmatched traffic.
+1. In the pop out, Name = AppGatewayRule, Priority = 300, IP Address block = 10.45.1.0/24 then click add rule.
+
+1. Ensure default action set to **Deny** for unmatched traffic.
 
 1. Save changes.
 
-1. Open **Function Apps** and select **<function-app-name>**.
+1. Open **Function Apps** and select **your function app**.
 
-1. Open **Networking** and configure access restrictions.
+1. Open **Networking** and click Enabled with no access restrictions.
+
+1. Repeat the steps you performed to create a rule on your web app.
 
 1. Add an allow rule for the approved function subnet only.
 
@@ -227,7 +234,7 @@ This exercise should take approximately **60** minutes to complete.
 
 ## Enforce Subscription Key Protection in API Management
 
-1. Open **API Management services** and select **<apim-name>**.
+1. Open **API Management services** and select **your API management**.
 
 1. Open **APIs** and select the pre-configured API.
 
@@ -248,6 +255,7 @@ This exercise should take approximately **60** minutes to complete.
     | With key | HTTP 200 |
     | Without key | HTTP 401 |
 
+Use the Azure portal to delete sc500-lab4c-rg Resource Group.
 ---
 
 ## Summary
