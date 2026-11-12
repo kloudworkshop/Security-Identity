@@ -17,7 +17,7 @@ lab:
 
 Follow these steps to deploy the resources used in the lab:
 
-1. Open the **Azure portal** at `https://portal.azure.com` and sign in with **User1**.
+1. Open the **Azure portal** at `https://portal.azure.com` and sign in with **Admin**.
 
 
 1. In the portal search bar, find and open **Deploy a custom template**.
@@ -60,7 +60,7 @@ This exercise should take approximately **65** minutes to complete.
 
 Azure Firewall is a managed, stateful network firewall as a service that provides centralized outbound traffic inspection for all resources in your hub-spoke network. In this lab, all outbound traffic from the `sc500-lab2c-spoke-vnet` workload subnet will route through the firewall in `sc500-lab2c-hub-vnet` — ensuring that outbound destinations are controlled by explicit application rules and all traffic is logged.
 
-1. Sign in to the **Azure portal** `https://portal.azure.com` using your **User1** credentials.
+1. Sign in to the **Azure portal** `https://portal.azure.com` using your **Admin** credentials.
 
 1. In the search bar, search for and select **Firewalls**.
 
@@ -406,6 +406,8 @@ Network Watcher's **IP flow verify** tool tests whether a specific traffic flow 
     | 200 | AllowInboundHTTPS | Allow |
 
     The Azure default rules (`AllowVnetInBound` at 65000, `AllowAzureLoadBalancerInBound` at 65001, `DenyAllInBound` at 65500) appear below your custom rules. This confirms your rules are evaluated first — any traffic matching priority 100 or 200 never reaches the defaults.
+
+Use the Azure Portal to delete the sc500-lab2c-rg Resource Group.
 
 ---
 
