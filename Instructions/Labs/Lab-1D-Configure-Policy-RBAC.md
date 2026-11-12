@@ -413,4 +413,4 @@ You have successfully completed this exercise.
 
 ## Clean up
 
-Use the Azure portal to delete the sc500-lab1d-rg resource group.
+Use the Azure portal to delete the sc500-lab1d-rg resource group and delete the Policy assignments added in this lab.
