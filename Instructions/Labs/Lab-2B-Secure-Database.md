@@ -18,7 +18,7 @@ Follow these steps to build out your lab scenarios:
 
 1. Open the **Azure Portal** at `https://portal.azure.com`.
 
-1. Log in with the **User1** administrator role.
+1. Log in with the **Admin** administrator role.
 
 1. Open **Cloud Shell**, select **Bash**, and run the following commands to register the resource provider used by Defender for Databases:
 
@@ -198,7 +198,7 @@ SQL auditing records all database-level events — queries, logins, schema chang
 
 1. Select **ai-workload-db** to open the database.
 
-1. In the left menu for `ai-workload-db`, select **Query editor (preview)**.
+1. In the left menu for `ai-workload-db`, select **Query editor**.
 
 1. In the authentication panel, select **SQL authentication**. Enter the following credentials:
 
@@ -207,9 +207,9 @@ SQL auditing records all database-level events — queries, logins, schema chang
     | **Login** | sc500sqladmin |
     | **Password** | SC500Lab2b! |
 
-    If the query editor reports that your IP address isn't allowed, select **Allowlist IP `<current-ip-address>`**. Wait up to 5 minutes for the firewall rule to take effect, and then select **Connect** again with the same credentials.
+    If the query editor reports that your IP address isn't allowed, select **Allowlist IP `<current-ip-address>`**. Wait up to 1 minute for the firewall rule to take effect, and then select **Connect** again with the same credentials.
 
-    > **Note**: The User1 account does not have database access — only members of the `sc500-sql-admins` Entra ID admin group do. SQL authentication uses the built-in SQL admin account created when the server was provisioned, which has access regardless of Entra ID group membership.
+    > **Note**: The Admin account does not have database access — only members of the `sc500-sql-admins` Entra ID admin group do. SQL authentication uses the built-in SQL admin account created when the server was provisioned, which has access regardless of Entra ID group membership.
 
 1. Select **+ New Query** to open a new query pane before typing.
 
@@ -251,7 +251,7 @@ Log Analytics ingestion typically takes 2–5 minutes after an event is generate
 
 1. Close the **Queries** dialog if it appears.
 
-1. In the upper-right corner of the page, select the mode dropdown and switch from **Simple mode** to **KQL mode**. This opens the KQL query editor.
+1. If necessary, disable Agent mode, in the upper-right corner of the page, select the mode dropdown and switch from **Simple mode** to **KQL mode**. This opens the KQL query editor.
 
 1. Click in the blank query area, then paste the following KQL query:
 
