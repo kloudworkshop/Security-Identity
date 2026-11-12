@@ -15,7 +15,7 @@ lab:
 
 Complete these steps before starting the exercise to deploy the resources and seed the container image used in the lab:
 
-1. Open the **Azure portal** at `https://portal.azure.com` and sign in with **User1**.
+1. Open the **Azure portal** at `https://portal.azure.com` and sign in with **Admin**.
 
 1. In the portal top bar, select the **Cloud Shell** icon (**>_**). If prompted, select **Bash** and **No storage account required**.
 
@@ -108,7 +108,7 @@ This exercise should take approximately **45** minutes to complete.
     - **sc500-lab4b-vnet**
     - One container registry whose name begins with **sc500lab4bacr**
 
-1. Open **<acr-name>**, select **Services** > **Repositories**, and then select **nginx**.
+1. Open **your container registry**, select **Services** > **Repositories**, and then select **nginx**.
 
 1. Confirm the **1.19.0-alpine** tag is present.
 
@@ -138,7 +138,7 @@ This exercise should take approximately **45** minutes to complete.
 
 1. Select **Continue** to return to the Defender plans page, and then select **Save** if the button is enabled.
 
-1. Return to **<acr-name>**, select **Services** > **Repositories** > **nginx**, and then select the **1.19.0-alpine** tag.
+1. Return to **your container registry**, select **Services** > **Repositories** > **nginx**, and then select the **1.19.0-alpine** tag.
 
 1. Confirm the image metadata opens successfully.
 
@@ -149,7 +149,7 @@ This exercise should take approximately **45** minutes to complete.
 
 ## Apply ACR Access Controls
 
-1. In **<acr-name>**, open **Settings** > **Access keys**.
+1. In **your container registry**, open **Settings** > **Access keys**.
 
 1. Set **Admin user** to **Disabled** by **unchecking** the checkbox.
 
@@ -219,7 +219,7 @@ This exercise should take approximately **45** minutes to complete.
 
 ## Restrict ACR Network Access
 
-1. In **<acr-name>**, open **Settings** > **Networking**.
+1. In **your container registry**, open **Settings** > **Networking**.
 
 1. On the **Public access** tab, in **Public network access**, select **Selected networks**.
 
@@ -235,6 +235,8 @@ This exercise should take approximately **45** minutes to complete.
 
 > [!NOTE]
 > The current Azure portal experience for ACR uses firewall IP rules on **Public access** when you select **Selected networks**. Virtual network and subnet selection is configured through **Private access** by creating a private endpoint connection, which isn't required for this lab.
+>
+> Use the Azure Portal to delete the sc500-lab4b-rg Resource Groups.
 
 ---
 
