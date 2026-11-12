@@ -15,7 +15,7 @@ lab:
 
 Follow these steps to deploy the resources used in the lab:
 
-1. Open the **Azure portal** at `https://portal.azure.com` and sign in with **User1**.
+1. Open the **Azure portal** at `https://portal.azure.com` and sign in with **Admin**.
 
 
 1. In the portal search bar, find and open **Deploy a custom template**.
@@ -58,7 +58,7 @@ You will create a stored access policy on the `training-data` container that gra
 
 > **Note**: The pre-provisioned storage account name begins with **`sc500lab2a`** followed by an 8-character suffix unique to your lab subscription. Throughout this lab, `<storage-account-name>` refers to that account. The `sc500-lab2a-rg` resource group contains exactly one storage account — select it whenever the lab asks for `<storage-account-name>`.
 
-1. Sign in to the Azure portal at `https://portal.azure.com` using your **User1** credentials.
+1. Sign in to the Azure portal at `https://portal.azure.com` using your **Admin** credentials.
 
 1. In the search bar, search for and select **Storage accounts**.
 
