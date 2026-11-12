@@ -17,7 +17,7 @@ Follow these steps to build out your lab scenarios:
 
 1. Open the **Azure Portal** at `https://portal.azure.com`.
 
-1. Log in with the **User1** administrator role.
+1. Log in with your **Admin** administrator role.
 
 1. In the Azure portal top bar, select the **Cloud Shell** icon (**>_**). If prompted, select **Bash**.
 
@@ -92,7 +92,7 @@ Before applying any controls, confirm the current state of the pre-provisioned e
 
 > **Note**: The pre-provisioned API Management instance name begins with **`sc500-lab3c-apim-`** followed by an 8-character suffix that is unique to your lab subscription. Throughout this lab, `<apim-name>` refers to that instance. The `sc500-lab3c-rg` resource group contains exactly one API Management instance — select it whenever the lab asks for `<apim-name>`.
 
-1. Sign in to the [Azure portal](https://portal.azure.com) using your **User1** credentials.
+1. Sign in to the [Azure portal](https://portal.azure.com) using your **Admin** credentials.
 
 1. In the search bar, search for and select **API Management services**.
 
@@ -346,10 +346,4 @@ You have successfully completed this exercise.
 
 ## Clean up
 
-The lab environment is automatically reset at the end of the session. No manual resource deletion is required.
-
-If you want to remove the content safety guardrail from the model deployment before the session ends:
-
-1. Navigate to the Azure AI Foundry portal > **sc500-lab3c-foundry** > **Models + endpoints**.
-1. Select the **gpt-5.4-mini** deployment and edit the deployment settings.
-1. Set **Content filter** back to the default filter or to none, then save.
+Use the Azure portal to delete sc500-lab3c-rg Resource Group.
