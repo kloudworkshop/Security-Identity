@@ -51,29 +51,27 @@ This exercise should take approximately **45** minutes to complete.
 
 ## Connect Microsoft Entra ID
 
-1. In **Micr** menu, expand the **Configuration** section. Then open **Data connectors**.
+1. In **Content Hub** search for **Microsoft Entra ID**, tick the check box and click **Install**.
 
-1. Search for and select **Microsoft Defender XDR**.
+1. Wait for it to install then click **Manage** Select the Microsoft Entra ID Connector and then click **open the connector Page**.
 
-1. Open the connector page and select **Open connector page**.
+1. Under Configuration select the tick boxes for **Sign-in Logs** & **Audit Logs** and then **Apply Changes**.
 
-1. Complete the connection workflow if requested. By default XDR should be connected automatically.
+1. Open another browser window in-private/incognito and connect to **Https://portal.azure.com**.
 
-1. Enable bi-directional incident synchronization if presented in connector options.
+1. Log-in as **USER2** but use an incorrect password to generate failed logins.
 
-1. Save settings.
-
-1. Record what data this connector contributes (alerts/incidents/entities).
+1. Return to your **Admin** browser.
 
 ---
 
 ## Connect Azure Activity
 
-1. In **Data connectors**, search for **Azure Activity**.
+1. In **Content Hub**, search for **Azure Activity**.
 
-1. Open the connector and connect the active subscription.
+1. Repeat the previous steps to Install the solution and Manage the connector to open the connector page.
 
-1. Save the connector configuration.
+1. In the Connector details page.
 
 1. Confirm connector status shows connected.
 
