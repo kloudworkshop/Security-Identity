@@ -59,7 +59,7 @@ This exercise should take approximately **45** minutes to complete.
 
 1. Open another browser window in-private/incognito and connect to **Https://portal.azure.com**.
 
-1. Log-in as **USER2** but use an incorrect password to generate failed logins.
+1. Attemp to log-in as **USER2** twice but use an incorrect password to generate failed logins.
 
 1. Return to your **Admin** browser.
 
@@ -71,32 +71,28 @@ This exercise should take approximately **45** minutes to complete.
 
 1. Repeat the previous steps to Install the solution and Manage the connector to open the connector page.
 
-1. In the Connector details page.
+1. In the Connector details page click **Launch Azure Policy Assignment Wizard**.
 
-1. Confirm connector status shows connected.
+1. In the Assign Policy window, click the **...** next to Scope and select your subscription then click **Select** and **Next**.
+
+1. On the Parameters tab click the **...** and select your workspace, click **Select** then **Next**.
+
+1. On the Remediation tab, check the **Create a remediation task** box and then **Review + create** and then **Create**.
 
 ---
 
 ## Verify Ingestion
 
-1. Open **Logs** for **sc500-lab4e-sentinel**.
+1. In the Navigation menu expand Hunting and then click Advanced Hunting.
 
 1. Run the following query:
 
     ```kusto
-    AzureActivity
-    | take 10
+    EntraIdSignInEvents
+| where AccountDisplayName contains "user"
     ```
 
-1. Confirm at least one row is returned.
-
-1. Record values from one result:
-
-    | Field | Value |
-    |-------|-------|
-    | OperationName | |
-    | Caller | |
-    | TimeGenerated | |
+1. You should see 2 rows returned, expand the rows to examine the details.
 
 ---
 
