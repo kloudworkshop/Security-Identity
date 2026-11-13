@@ -24,7 +24,7 @@ Your SOC cannot automate triage if data sources are disconnected and workflow ac
 In this lab, you will:
 
 - Review the pre-provisioned Sentinel workspace state.
-- Connect the Microsoft Defender XDR connector.
+- Connect the Microsoft Entra ID connector.
 - Connect the Azure Activity connector.
 - Verify event ingestion with a Log Analytics query.
 - Build an automation rule for high-severity incidents.
@@ -37,42 +37,21 @@ This exercise should take approximately **45** minutes to complete.
 
 ---
 
-## Create a Log Analytics space
+## Review the Workspace for use in Microsoft Sentinel
 
-1. Sign in to the **Azure portal** `https://portal.azure.com` with your Administrator account.
+1. Open a browser and connect to **HTTPS://security.microsoft.com**, if necessary login as your **Admin** account.
 
-1. In the **Search resources...** bar, find and open `Log Analytics Workspaces`.
+1. Select **Show Navigation** then expand **Setup & Configuration** and then click **Settings**.
 
-1. Select the **+ Create** option.
+1. In Settings click **Microsoft Sentinel** and confirm that your workspace is connected.
 
-1. Create a **Workspace** with these settings:
-
-   - Subscription = **Use the default provided**
-   - Resource Group = **Create New** --> **lab4e-rg**
-   - Name = `sc500-lab4e-sentinel`
-   - Region = **Use the default**
-
-1. Select **Review + create**.
-
-1. When the validation finishes, select **Create**.
+1. In the Navigation pane, expand **Microsoft Sentinel**, expand **Content Management** and then click **Content Hub**.
 
 ---
 
-## Review / Create a Workspace for use in Microsoft Sentinel
+## Connect Microsoft Entra ID
 
-1. Use the search bar to open `Microsoft Sentinel`.
-
-1. Select workspace **sc500-lab4e-sentinel**.
-
-1. Use the **Add** button to attach Sentinel to the workspace.
-
-1. Review the workspace overview and confirm the current baseline state (connectors and incidents).
-
----
-
-## Connect Microsoft Defender XDR
-
-1. In the **Microsoft Sentinel** menu, expand the **Configuration** section. Then open **Data connectors**.
+1. In **Micr** menu, expand the **Configuration** section. Then open **Data connectors**.
 
 1. Search for and select **Microsoft Defender XDR**.
 
