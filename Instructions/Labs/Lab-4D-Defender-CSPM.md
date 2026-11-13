@@ -24,7 +24,7 @@ Follow these steps to build out your lab scenarios:
 
 1. Open the **Azure Portal** at `https://portal.azure.com`.
 
-1. Log in with the **User1** administrator role.
+1. Log in with the **Admin** administrator role.
 
 1. Open Cloud Shell, select **Bash**, and register the Microsoft.Security resource provider:
 
