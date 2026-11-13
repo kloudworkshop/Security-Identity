@@ -1,7 +1,7 @@
 ---
 lab:
     title: 'Configure Microsoft Sentinel Data Collection and Automation'
-    description: 'Connect Microsoft Defender XDR and Azure Activity data into Sentinel, verify ingestion, and configure automation rules that trigger a pre-built playbook.'
+    description: 'Connect Microsoft Entra ID and Azure Activity data into Sentinel, verify ingestion, and configure automation rules that trigger a pre-built playbook.'
     level: 300
     duration: 45
     islab: true
@@ -33,7 +33,7 @@ In this lab, you will:
 
 This exercise should take approximately **45** minutes to complete.
 
-> **Note**: This lab uses the pre-provisioned Sentinel workspace `sc500-lab4e-sentinel` and playbook `sc500-incident-playbook`.
+> **Note**: This lab uses the workspace created at the start of the course.
 
 ---
 
