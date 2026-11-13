@@ -88,7 +88,7 @@ This exercise should take approximately **45** minutes to complete.
 
     ```kusto
     EntraIdSignInEvents
-| where AccountDisplayName contains "user2"
+| where ErrorCode == 50126
     ```
 
 1. You should see 2 rows returned, expand the rows to examine the details.
