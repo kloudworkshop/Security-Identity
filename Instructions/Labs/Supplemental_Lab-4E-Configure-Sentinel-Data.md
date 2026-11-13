@@ -28,8 +28,7 @@ In this lab, you will:
 - Connect the Azure Activity connector.
 - Verify event ingestion with a Log Analytics query.
 - Build an automation rule for high-severity incidents.
-- Link the rule to the pre-built playbook.
-- Review content available through Content Hub.
+- Link the rule to an alert.
 
 This exercise should take approximately **45** minutes to complete.
 
@@ -96,23 +95,21 @@ This exercise should take approximately **45** minutes to complete.
 
 ---
 
-## Configure Automation Rule and Playbook Link
+## Configure Detection Rule and Automation rule
 
-1. In Sentinel, open **Automation** then **Automation rules**.
+1. In Advanced Hunting, click **Create Detection Rule** then:
 
-1. Select **Create** and configure:
+    - Detection name: `sc500-auto-triage`
+    - Severity: High
+    - Mitre Attack: Discovery
 
-    - Rule name: `sc500-auto-triage`
-    - Trigger: Incident created
-    - Condition: Severity equals High
+1. Click **Next**, Alert Details:
 
-1. Add actions:
+    - Alert Title : My Alert
+    - Description : My Alert
+    - Click **Next** twice.
 
-    - Change severity to Critical
-    - Assign owner to **User1**
-    - Run playbook: **sc500-incident-playbook**
-
-1. Save the automation rule.
+1. On Automated Actions expand **Users** and tick **Mark user as compromised** then click Next and **Submit**.
 
 1. Open **sc500-incident-playbook** and review:
 
