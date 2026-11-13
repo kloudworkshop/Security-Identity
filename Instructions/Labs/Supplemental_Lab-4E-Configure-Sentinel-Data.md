@@ -1,7 +1,7 @@
 ---
 lab:
-    title: 'Configure Microsoft Sentinel Data Collection and Automation'
-    description: 'Connect Microsoft Entra ID and Azure Activity data into Sentinel, verify ingestion, and configure automation rules that trigger a pre-built playbook.'
+    title: 'Configure Microsoft Sentinel Data Collection and Automation in a Unified SecOPs'
+    description: 'Connect Microsoft Entra ID and Azure Activity data into Sentinel, verify ingestion, and configure automation rule.'
     level: 300
     duration: 45
     islab: true
@@ -88,7 +88,7 @@ This exercise should take approximately **45** minutes to complete.
 
     ```kusto
     EntraIdSignInEvents
-| where AccountDisplayName contains "user"
+| where AccountDisplayName contains "user2"
     ```
 
 1. You should see 2 rows returned, expand the rows to examine the details.
@@ -111,25 +111,15 @@ This exercise should take approximately **45** minutes to complete.
 
 1. On Automated Actions expand **Users** and tick **Mark user as compromised** then click Next and **Submit**.
 
-1. Open **sc500-incident-playbook** and review:
+1. Open another browser window in-private/incognito and connect to **Https://portal.azure.com**.
 
-    - Trigger type
-    - Key action steps
-    - Final action output target
+1. Attemp to log-in as **USER2** twice but use an incorrect password to generate failed logins.
 
-1. Record these details in your notes.
+1. Open a browser and connect to **Https://Entra.microsoft.com** and login as **Admin**
 
----
+1. Expand **Identity Protection** and click **Risky Users** and confirm the User2 is **Confirmed compromised**
 
-## Review Content Hub Package Scope
-
-1. Open **Content hub** in Sentinel.
-
-1. Search for **Microsoft Defender XDR**.
-
-1. Open the solution details page and review included content types.
-
-1. Record at least two analytics rule names or content artifacts listed in the package.
+1. Return to **Microsoft Defender** Portal and confirm **Alert** generation.
 
 ---
 
@@ -140,6 +130,5 @@ In this lab, you established Sentinel collection and orchestration fundamentals:
 - Connected core Microsoft security telemetry sources.
 - Verified that events are ingesting into the workspace.
 - Configured incident automation to standardize triage actions.
-- Linked automation to a reusable playbook.
 
 This creates the base operating pattern for SOC data readiness and repeatable incident response automation.
