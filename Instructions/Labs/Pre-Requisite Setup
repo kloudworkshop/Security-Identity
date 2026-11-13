@@ -44,3 +44,8 @@ Remove the Automatically create a password & Require this user to change their p
 Use the same password as your admin account in the password box click next.
 Select Create User without product license, click nect twice and then click Finish Adding, then close.
 Create 2 more user accounts, USER2 & USER3, same password, no license.
+
+DEFENDER CSPM LAB
+To best experience the Explore Defender for Cloud Security Posture and CSPM lab, the setup needs to be run at least 24 hours before attempting the lab.
+Consider runnung the lab setup exercise either as the last activity of day 2 or first thing day 3.
+Ensure that the sc500-lab4d-rg Resource Group is not deleted until completing the lab.
