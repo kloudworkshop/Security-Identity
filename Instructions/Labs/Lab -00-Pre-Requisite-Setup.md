@@ -21,6 +21,7 @@ to configure we are going to complete the steps now to minimise wait time later.
 1. Login to https://portal.azure.com using the admin account provided by your Instructor.
    
   >**Note**: If necessary complete Multi Factor Authentication Registration.
+---
 
 # ENABLE DEFENDER FOR CLOUD
 
