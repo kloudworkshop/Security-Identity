@@ -13,7 +13,7 @@ lab:
 
 ===
 
-# Pre Requisite Setup
+## Pre Requisite Setup
 
 As the course covers technologies that can take between 12 to 24 hours to generate any results or be available
 to configure we are going to complete the steps now to minimise wait time later.
@@ -23,7 +23,7 @@ to configure we are going to complete the steps now to minimise wait time later.
   >**Note**: If necessary complete Multi Factor Authentication Registration.
 ---
 
-# ENABLE DEFENDER FOR CLOUD
+## ENABLE DEFENDER FOR CLOUD
 
 1. On the Azure portal home page, type Defender in the top search bar and select Defender for Cloud.
    
@@ -43,7 +43,7 @@ to configure we are going to complete the steps now to minimise wait time later.
    
 1. Return to the Home page.
 
-# ENABLE MICROSOFT SENTINEL
+## ENABLE MICROSOFT SENTINEL
 
 1. On the Azure portal home page, type Sentinel in the top search bar and select Microsoft Sentinel.
 
@@ -67,7 +67,7 @@ to configure we are going to complete the steps now to minimise wait time later.
 
 1. Select Microsoft Sentinel, and in the WorkSpaces page, confirm MySentinel is connected, if not connect the workspace.
 
-# MANAGE ENTRA ID
+## MANAGE ENTRA ID
 
 1. Open another browser tab and type Https://entra.microsoft.com.
 
@@ -98,7 +98,7 @@ and then Save, then Disable and wait for the confirmation.
 
 1. Create 2 more user accounts, USER2 & USER3, same password, no license.
 
-# DEFENDER CSPM LAB
+## DEFENDER CSPM LAB
 1. To best experience the Explore Defender for Cloud Security Posture and CSPM lab, the setup needs to be run at least 24 hours before attempting the lab.
 
 1. Consider runnung the lab setup exercise either as the last activity of day 2 or first thing day 3.
