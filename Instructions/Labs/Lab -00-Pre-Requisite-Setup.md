@@ -100,7 +100,7 @@ and then Save, then Disable and wait for the confirmation.
 
 1. Create 2 more user accounts, USER2 & USER3, same password, no license.
 
-## DEFENDER CSPM LAB
+## Defender CSPM Lab
 
 1. To best experience the Explore Defender for Cloud Security Posture and CSPM lab, the setup needs to be run at least 24 hours before attempting the lab.
 
