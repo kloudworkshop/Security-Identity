@@ -21,7 +21,7 @@ to configure we are going to complete the steps now to minimise wait time later.
 
 ---
 
-## ENABLE DEFENDER FOR CLOUD
+## Enable Defender For Cloud
 
 1. Login to https://portal.azure.com using the admin account provided by your Instructor.
    
@@ -45,7 +45,7 @@ to configure we are going to complete the steps now to minimise wait time later.
    
 1. Return to the Home page.
 
-## ENABLE MICROSOFT SENTINEL
+## Enable Microsoft Sentinel
 
 1. On the Azure portal home page, type Sentinel in the top search bar and select Microsoft Sentinel.
 
@@ -69,7 +69,7 @@ to configure we are going to complete the steps now to minimise wait time later.
 
 1. Select Microsoft Sentinel, and in the WorkSpaces page, confirm MySentinel is connected, if not connect the workspace.
 
-## MANAGE ENTRA ID
+## Manage Entra ID
 
 1. Open another browser tab and type https://entra.microsoft.com.
 
