@@ -1,4 +1,4 @@
-Login to https:\\portal.azure.com using the admin account provided by your Instructor
+Login to https://portal.azure.com using the admin account provided by your Instructor
 If nessessary complete Multi Factor Authentication Registration.
 
 As the course covers technologies that can take between 12 to 24 hours to generate any results or be available
