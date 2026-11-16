@@ -1,3 +1,4 @@
+---
 lab:
     title: 'Pre Requisite Setup'
     description: 'Pre Requisite Setup.'
@@ -6,7 +7,7 @@ lab:
     islab: true
     primarytopics:
         - Pre Requisite Setup for course
-
+---
         
 Login to https://portal.azure.com using the admin account provided by your Instructor
 If nessessary complete Multi Factor Authentication Registration.
