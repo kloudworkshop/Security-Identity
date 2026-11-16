@@ -59,7 +59,7 @@ to configure we are going to complete the steps now to minimise wait time later.
 
 1. Wait for 1 min for Sentinel to deploy.
 
-1. 1. Open a new browser tab and type Https://security.microsoft.com
+1.  Open a new browser tab and type https://security.microsoft.com
 
 1. In the Microsoft Defender Portal, click Show Navigation, expand Setup & Configuration and click Settings.
 
@@ -69,7 +69,7 @@ to configure we are going to complete the steps now to minimise wait time later.
 
 ## MANAGE ENTRA ID
 
-1. Open another browser tab and type Https://entra.microsoft.com.
+1. Open another browser tab and type https://entra.microsoft.com.
 
 1. Select Overview under Entra ID and then click the Properties tab.
 
@@ -78,7 +78,7 @@ to configure we are going to complete the steps now to minimise wait time later.
 1. In the pop out select Disabled under Security Defaults and then select My Organisation is planning to use Conditional Access
 and then Save, then Disable and wait for the confirmation.
 
-1 Open another browser tab and type Https://admin.microsoft.com
+1 Open another browser tab and type https://admin.microsoft.com
 
 1. In the Microsoft 365 Admin Center expand Users and click Active Users.
 
@@ -99,6 +99,7 @@ and then Save, then Disable and wait for the confirmation.
 1. Create 2 more user accounts, USER2 & USER3, same password, no license.
 
 ## DEFENDER CSPM LAB
+
 1. To best experience the Explore Defender for Cloud Security Posture and CSPM lab, the setup needs to be run at least 24 hours before attempting the lab.
 
 1. Consider runnung the lab setup exercise either as the last activity of day 2 or first thing day 3.
