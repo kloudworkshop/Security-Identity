@@ -23,7 +23,7 @@ to configure we are going to complete the steps now to minimise wait time later.
 
 ## Enable Defender For Cloud
 
-1. Login to https://portal.azure.com using the admin account provided by your Instructor.
+1. Login to [https://portal.azure.com](https://portal.azure.com) using the admin account provided by your Instructor.
    
   >**Note**: If necessary complete Multi Factor Authentication Registration.
 
@@ -61,7 +61,7 @@ to configure we are going to complete the steps now to minimise wait time later.
 
 1. Wait for 1 min for Sentinel to deploy.
 
-1.  Open a new browser tab and type https://security.microsoft.com
+1.  Open a new browser tab and type [https://security.microsoft.com](https://security.microsoft.com)
 
 1. In the Microsoft Defender Portal, click Show Navigation, expand Setup & Configuration and click Settings.
 
@@ -71,7 +71,7 @@ to configure we are going to complete the steps now to minimise wait time later.
 
 ## Manage Entra ID
 
-1. Open another browser tab and type https://entra.microsoft.com.
+1. Open another browser tab and type [https://entra.microsoft.com.](https://entra.microsoft.com).
 
 1. Select Overview under Entra ID and then click the Properties tab.
 
@@ -80,7 +80,7 @@ to configure we are going to complete the steps now to minimise wait time later.
 1. In the pop out select Disabled under Security Defaults and then select My Organisation is planning to use Conditional Access
 and then Save, then Disable and wait for the confirmation.
 
-1 Open another browser tab and type https://admin.microsoft.com
+1 Open another browser tab and type [https://entra.microsoft.com](https://admin.microsoft.com).
 
 1. In the Microsoft 365 Admin Center expand Users and click Active Users.
 
