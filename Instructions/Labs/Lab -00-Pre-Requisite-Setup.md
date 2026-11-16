@@ -13,7 +13,7 @@ lab:
 
 ===
 
-## Pre Requisite Setup
+# Pre Requisite Setup
 
 As the course covers technologies that can take between 12 to 24 hours to generate any results or be available
 to configure we are going to complete the steps now to minimise wait time later.
