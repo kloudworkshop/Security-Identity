@@ -66,7 +66,7 @@ This exercise should take approximately **60** minutes to complete.
 
 > **Note**: The deployed App Service name begins with **`sc500-lab1c-app-`** followed by an automatically generated suffix. Throughout this lab, `<app-service-name>` refers to that App Service.
 
-> **Note**: This lab uses two accounts: your **User1** account (your primary lab credentials and Administrator) and **User2** (used to verify that role-based access boundaries are enforced at the data plane). Use the credentials provided for both accounts.
+> **Note**: This lab uses two accounts: your **QA** account (your primary lab credentials and Administrator) and **User2** (used to verify that role-based access boundaries are enforced at the data plane). Use the credentials provided for both accounts.
 
 ---
 
