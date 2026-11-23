@@ -164,7 +164,7 @@ The `<app-service-name>` App Service has a system-assigned managed identity that
 
 1. Select **+ Select members**.
 
-1. On the **Select managed identities** pane, set **Managed identity** to **App Service**, then select **<your-kv-name>** from the list.
+1. On the **Select managed identities** pane, set **Managed identity** to **App Service**, then select **app-service-name** from the list.
 
 1. Select **Select**, then select **Review + assign**, then select **Review + assign** again to save.
 
