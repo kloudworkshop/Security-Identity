@@ -274,7 +274,7 @@ When managed identity is enabled on an App Service, the runtime injects two envi
 
 1. Confirm you are signed in to the Azure portal at `https://portal.azure.com` as **Admin**. If the InPrivate window from the previous section is still active, close it first.
 
-1. Open **App Services**, and then select **<app-service-name>**.
+1. Open **App Services**, and then select **app-service-name**.
 
 1. Under **Development Tools**, select **SSH**, and then select **Go**.
 
