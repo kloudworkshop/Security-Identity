@@ -80,7 +80,7 @@ to configure we are going to complete the steps now to minimise wait time later.
 1. In the pop out select Disabled under Security Defaults and then select My Organisation is planning to use Conditional Access
 and then Save, then Disable and wait for the confirmation.
 
-1 Open another browser tab and type [https://entra.microsoft.com](https://admin.microsoft.com).
+1 Open another browser tab and type [https://admin.microsoft.com](https://admin.microsoft.com).
 
 1. In the Microsoft 365 Admin Center expand Users and click Active Users.
 
