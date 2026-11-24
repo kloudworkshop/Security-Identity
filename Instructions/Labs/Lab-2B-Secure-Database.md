@@ -73,7 +73,7 @@ Using a SQL-only administrator account means database access cannot be governed 
 
 You will create a security group named `sc500-sql-admins`, add `User3` as a member, and configure the group as the Entra ID administrator for the SQL server deployed in `sc500-lab2b-rg`.
 
-1. Sign in to the **Microsoft Entra admin center** at `https://entra.microsoft.com` using the credentials provided for **User1**. User1 must have the **Global Administrator** role.
+1. Sign in to the **Microsoft Entra admin center** at `https://entra.microsoft.com` using the credentials provided for **QA**.
 
 1. In the left menu, expand **Groups** and select **All groups**.
 
@@ -98,7 +98,7 @@ You will create a security group named `sc500-sql-admins`, add `User3` as a memb
 
 1. Navigate to the **Azure portal** `https://portal.azure.com`.
 
-1. In the search bar, search for and select **SQL servers**.
+1. In the search bar, search for and select **SQL server**.
 
 1. Select the SQL server in **sc500-lab2b-rg** whose name begins with `sc500-lab2b-sql-`.
 
