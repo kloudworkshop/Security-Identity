@@ -29,7 +29,7 @@ Follow these steps to deploy the resources used in the lab:
 
 1. Select **Review + create**, and then select **Create**.
 
-1. Wait until the deployment shows **Succeeded** before continuing. If template fails validation due to quota, edit JSON location to WestUs3 &  Microsoft.web/serverfams to use P3V2 size.
+1. Wait until the deployment shows **Succeeded** before continuing. If template fails validation due to quota, edit JSON line 30 location to WestUs3 & lines 267 & 269  Microsoft.web/serverfams to use P3V2 size.
 
 ===
 
