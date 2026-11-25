@@ -34,25 +34,23 @@ This exercise should take approximately **45** minutes to complete.
 
 ---
 
-## Review the Preconfigured State
+## Create Azure Resources
 
 1. Sign in to the Azure portal and open **Resource groups**.
 
-1. Select **sc500-lab4f-rg** and confirm **sc500-lab4f-storage** exists.
-
-1. Confirm your tenant account includes access required to provision SCU capacity in Security Copilot.
+1. Create a new Resource Group called **sc500-lab4f-rg** in UK South.
 
 ---
 
 ## Provision Security Copilot Capacity
 
-1. Sign in to [https://securitycopilot.microsoft.com](https://securitycopilot.microsoft.com) using your **User1** account.
+1. Sign in to [https://securitycopilot.microsoft.com](https://securitycopilot.microsoft.com) using your **QA** account.
 
-1. Start the setup flow for capacity provisioning.
+1. On the Welcome to **Microsoft Security Copilot** page click **Get Started**.
 
-1. Provision **1 SCU** in **East US**, unless your lab environment directs you to use another region.
+1. On the **Workspace Info page** use **MyCPWorkspace** as **Workspace name** and select **United Kingdom** as **Data Storage Location** then click **Continue**, and the **Get Started**.
 
-1. Confirm provisioning completes and the workspace becomes available.
+1. On the **Set up your security capacity** page, select **Your Subscription**, **sc500-lab4f-rg** Resource Group, **Prompt evaluation location** choose **UK** and check Capacity region is **UK South** and **1 unit** is provisioned. Slide the control to disable **Overage units**. Tick the **I acknowledge** box and click **continue**.
 
 1. Record capacity settings in your notes:
 
