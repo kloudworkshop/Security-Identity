@@ -197,6 +197,8 @@ Anonymous access to the Foundry API endpoint is the highest-priority gap — rat
 
 1. Select **Create**.
 
+1. Select the **...** of the **Built-in all-access subscription** and select **Suspend Subscription**.
+
 1. On the subscriptions list, find **sc500-test-subscription** and select **Show/hide keys** to reveal the primary key. Copy the primary key value — you will use it in the next section.
 
 ---
