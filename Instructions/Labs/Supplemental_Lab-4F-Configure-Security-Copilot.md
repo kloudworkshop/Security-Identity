@@ -32,8 +32,6 @@ In this lab, you will:
 
 This exercise should take approximately **45** minutes to complete.
 
-> **Note**: This lab assumes Security Copilot SCU provisioning is enabled in your environment and that relevant Microsoft security data sources are available.
-
 ---
 
 ## Review the Preconfigured State
