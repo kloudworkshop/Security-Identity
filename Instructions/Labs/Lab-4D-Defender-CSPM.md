@@ -128,27 +128,6 @@ This exercise should take approximately **75** minutes to complete.
 1. If results are not yet available, review the standards and controls hierarchy. In a populated environment, each control shows its compliance state, backing policy assessments, affected resources, and available remediation guidance.
 ---
 
-## Investigate CSPM Secret Scanning Findings
-
-1. Open **Cloud Security Posture Management** and navigate to **Secret scanning**.
-
-1. If a finding is available for **web-app-name**, open it and record:
-
-    | Field | Value |
-    |-------|-------|
-    | Finding type | |
-    | Affected resource | <web-app-name> |
-    | Detected secret category | |
-
-1. If no finding is present, review the filters and finding fields. In a populated environment, a secret-scanning finding identifies the exposed secret category, affected resource, evidence location, severity, and remediation guidance.
-
-1. Open **web-app-name** configuration and identify the synthetic exposed app setting.
-
-1. Open **key-vault-name** and confirm the managed secret baseline exists.
-
-1. Explain why secrets in app settings are flagged, why properly stored Key Vault secrets are treated differently, and why this distinction matters for remediation ownership.
----
-
 ## Review Attack Path Analysis
 
 1. Open **Attack path analysis**.
