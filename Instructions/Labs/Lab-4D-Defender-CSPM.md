@@ -24,7 +24,7 @@ Follow these steps to build out your lab scenarios:
 
 1. Open the **Azure Portal** at `https://portal.azure.com`.
 
-1. Log in with the **Admin** administrator role.
+1. Log in with the **QA** administrator account.
 
 1. Open Cloud Shell, select **Bash**, and register the Microsoft.Security resource provider:
 
@@ -132,7 +132,7 @@ This exercise should take approximately **75** minutes to complete.
 
 1. Open **Cloud Security Posture Management** and navigate to **Secret scanning**.
 
-1. If a finding is available for **<web-app-name>**, open it and record:
+1. If a finding is available for **web-app-name**, open it and record:
 
     | Field | Value |
     |-------|-------|
@@ -142,9 +142,9 @@ This exercise should take approximately **75** minutes to complete.
 
 1. If no finding is present, review the filters and finding fields. In a populated environment, a secret-scanning finding identifies the exposed secret category, affected resource, evidence location, severity, and remediation guidance.
 
-1. Open **<web-app-name>** configuration and identify the synthetic exposed app setting.
+1. Open **web-app-name** configuration and identify the synthetic exposed app setting.
 
-1. Open **<key-vault-name>** and confirm the managed secret baseline exists.
+1. Open **key-vault-name** and confirm the managed secret baseline exists.
 
 1. Explain why secrets in app settings are flagged, why properly stored Key Vault secrets are treated differently, and why this distinction matters for remediation ownership.
 ---
